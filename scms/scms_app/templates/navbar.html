@@ -319,8 +319,7 @@
       </div>
       <div class="u-clearfix u-sheet u-sheet-1">
           {% if user.is_authenticated %}
-          {% url 'profile' as profile_url %}
-          <div style="display:flex; flex-direction:column; margin-top:-10px; gap:5px;">
+          <div style="display:flex; flex-direction:column; margin-top:-10px; gap:25px;">
             <span class="span-login">Welcome,&nbsp<span class="span-un">{{user.username}}</span>
             <span><a class="nav-a" href="/logout"><button class="button button2">Logout</button></a></span>
           </div>
