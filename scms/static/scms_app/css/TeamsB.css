@@ -26,7 +26,6 @@
 .u-section-1 .u-repeater-1 {
   grid-template-columns: calc(33.3333% - 6.66667px) calc(33.3333% - 6.66667px) calc(33.3333% - 6.66667px);
   grid-gap: 10px 10px;
-  min-height: 828px;
 }
 
 .u-section-1 .u-list-item-1 {

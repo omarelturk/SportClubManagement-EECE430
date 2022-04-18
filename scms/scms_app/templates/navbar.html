@@ -1,33 +1,5 @@
 {% load static %}
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta charset="utf-8" />
-    <meta name="keywords" content="INTUITIVE" />
-    <meta name="description" content="" />
-    <meta name="page_type" content="np-template-header-footer-from-plugin" />
-    <link
-      rel="stylesheet"
-      href="{% static 'scms_app/css/nicepage.css' %}"
-      media="screen"
-    />
-    <link
-      rel="stylesheet"
-      href="{% static 'scms_app/css/Home.css' %}"
-      media="screen"
-    />
-    <script
-      class="u-script"
-      type="text/javascript"
-      src="{% static 'scms_app/js/jquery.js' %}"
-      defer=""
-    ></script>
-    <script
-      class="u-script"
-      type="text/javascript"
-      src="{% static 'scms_app/js/nicepage.js' %}"
-      defer=""
-    ></script>
-
     <style>
       .button {
         background-color: #4CAF50; /* Green */
@@ -36,10 +8,10 @@
         text-align: center;
         text-decoration: none;
         display: inline-block;
-        font-size: 16px;
+        font-size: 14pt;
         transition-duration: 0.4s;
         cursor: pointer;
-        width: 100px;
+        width: 120px;
         border-radius: 10px;
       }
 
@@ -65,7 +37,7 @@
       }
 
       .span-login{
-        font-size:14pt; 
+        font-size:16pt; 
         font-weight:bold;
       }
       .span-un{
@@ -105,9 +77,9 @@
 <header
       class="u-clearfix u-custom-color-3 u-header u-sticky u-sticky-9038 u-header"
       id="sec-2308"
-      style="display:flex;flex-direction:row; gap:200px; height:100px;padding-top:2%"
     > 
-      <div style="display:flex; flex-direction:column; justify-content:center;">
+    <div style="display:flex; flex-direction:row; justify-content:space-around;">
+      {% comment %} <div style="display:flex; flex-direction:column; justify-content:center;"> {% endcomment %}
         <a
           href=""
           class="u-image u-logo u-image-1"
@@ -119,7 +91,7 @@
             class="u-logo-image u-logo-image-1"
           />
         </a>
-        <nav class="u-menu u-menu-dropdown u-offcanvas u-menu-1 nav-bar-1">
+        <nav class="u-menu u-menu-dropdown u-offcanvas u-menu-1 nav-bar-1" style="display:flex; align-items:center;">
           <div
             class="menu-collapse"
             style="
@@ -315,16 +287,20 @@
             <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
           </div>
         </nav>
-        
-      </div>
-      <div class="u-clearfix u-sheet u-sheet-1">
-          {% if user.is_authenticated %}
-          <div style="display:flex; flex-direction:column; margin-top:-10px; gap:25px;">
+      {% comment %} </div> {% endcomment %}
+      {% if user.is_authenticated %}
+          <div style="display:flex; flex-direction:column; justify-content: center; align-items: center;">
+          <div>
             <span class="span-login">Welcome,&nbsp<span class="span-un">{{user.username}}</span>
-            <span><a class="nav-a" href="/logout"><button class="button button2">Logout</button></a></span>
+          </div>
+          <div>
+            <span><a class="nav-a" href="/logout">
+            <button class="button button2">Logout</button></a>
+          </div>
+            </span>
           </div>
           {%else%}
-          <div style="display:flex; flex-direction:column; margin-top:-10px; gap:5px">
+          <div style="display:flex; flex-direction:row; gap:10px; align-items:center;">
           <div>
               <a
                 href="Signup.html"
@@ -343,7 +319,13 @@
               </a>
           </div>
           {%endif%}
-        </div>
+      </div>
+
+        
+
+      {% comment %} <div class="u-clearfix u-sheet u-sheet-1">
+          
+        </div> {% endcomment %}
     </div>
   </header>
 

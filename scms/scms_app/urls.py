@@ -12,6 +12,10 @@ urlpatterns = [
     path('StadiumMuseum.html', views.StadiumMuseum, name='StadiumMuseum'),
     path('TeamsB.html', views.TeamsB, name='TeamsB'),
     path('TeamsF.html', views.TeamsF, name='TeamsF'),
+    path('Fixtures.html', views.Fixtures, name='Fixtures'),
+    path('Tickets.html', views.Tickets, name='Tickets'),
+    path('Shop.html', views.Shop, name='Shop'),
+    path('News.html', views.News, name='News'),
     #path("register", views.register_request, name="register")
     # path('/login', views.LoginView.as_view(template_name="scms_app/templates/Signin.html"), name='login'),
     # path('/logout', views.LogoutView.as_view(), name='logout')

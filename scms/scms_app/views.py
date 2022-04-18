@@ -1,4 +1,5 @@
 #from multiprocessing import context
+from multiprocessing import context
 from os import stat
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -17,10 +18,14 @@ from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
+import netifaces as ni
+from scms_app.models import Football_Player, Basketball_Player, Ticket
 
 
 from .models import *
 from .forms import NewUserForm
+
+ip = ni.ifaddresses('en0')[ni.AF_INET][0]['addr']
 
 
 def register_request(request):
@@ -78,7 +83,7 @@ def password_reset_request(request):
 					email_template_name = "password/password_reset_email.txt"
 					c = {
 					"email":user.email,
-					'domain':'10.169.34.202:8000',
+					'domain':f'{ip}:8000',
 					'site_name': 'Website',
 					"uid": urlsafe_base64_encode(force_bytes(user.pk)),
 					'token': default_token_generator.make_token(user),
@@ -98,6 +103,10 @@ def password_reset_request(request):
 	return render(request=request, template_name="password/password_reset.html", context={"password_reset_form":password_reset_form})
 
 
+
+
+###############################################################################################
+
 def Home(request):
     return render(request, 'Home.html', {})
 
@@ -111,8 +120,36 @@ def StadiumMuseum(request):
 
 
 def TeamsB(request):
-    return render(request, 'TeamsB.html', {})
+    context={}
+    if request.method == 'GET':
+        bplayers = Basketball_Player.objects.all()
+        context['players'] = bplayers
+        return render(request, 'TeamsB.html', context)
 
 
 def TeamsF(request):
-    return render(request, 'TeamsF.html', {})
+    context={}
+    if request.method == 'GET':
+        fplayers = Football_Player.objects.all()
+        context['players'] = fplayers
+        return render(request, 'TeamsF.html', context)
+            
+            # else:
+            #     messages.error(request, 'Player sport type was not chosen.') 
+        
+
+def Fixtures(request):
+    return render(request, 'Fixtures.html', {})
+
+def Tickets(request):
+    context={}
+    if request.method == 'GET':
+        tickets = Ticket.objects.all()
+        context["tickets"] = tickets
+        return render(request, 'Tickets.html', context)
+
+def Shop(request):
+    return render(request, 'Shop.html', {})
+
+def News(request):
+    return render(request, 'News.html', {})    

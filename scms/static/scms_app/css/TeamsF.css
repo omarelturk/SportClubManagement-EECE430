@@ -36,7 +36,7 @@
 .u-section-1 .u-repeater-2 {
   grid-template-columns: calc(25% - 7.5px) calc(25% - 7.5px) calc(25% - 7.5px) calc(25% - 7.5px);
   grid-gap: 10px 10px;
-  min-height: 1401px;
+  /* min-height: 1401px; */
   grid-auto-columns: calc(25% - 7.5px);
 }
 
@@ -47,6 +47,8 @@
 
 .u-section-1 .u-container-layout-1 {
   padding: 30px 29px;
+  background-color: #fcece3;
+  border-radius: 30px;
 }
 
 .u-section-1 .u-text-2 {

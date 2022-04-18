@@ -21,7 +21,34 @@
         </div>
         <div class="u-expanded-width u-layout-grid u-list u-list-2">
           <div class="u-repeater u-repeater-2">
+
+
+            {% for player in players %}
             <div
+            class="u-align-center u-container-style u-list-item u-repeater-item u-list-item-1"
+          >
+            <div
+              class="u-container-layout u-similar-container u-container-layout-1"
+            >
+              <h2 class="u-text u-text-2">{{player.player_number}}</h2>
+              <img
+                alt=""
+                class="u-image u-image-round u-radius-50 u-image-1"
+                data-image-width="360"
+                data-image-height="390"
+                src={{player.player_image}}
+              />
+              <h5 class="u-text u-text-3">{{player.player_name}}</h5>
+              <p class="u-text u-text-4">{{player.player_position}}</p>
+              <p class="u-large-text u-text u-text-variant u-text-5">
+                {{player.player_nationality}}
+              </p>
+            </div>
+          </div>
+            {% endfor %}
+
+
+            {% comment %} <div
               class="u-align-center u-container-style u-list-item u-repeater-item u-list-item-1"
             >
               <div
@@ -251,7 +278,7 @@
                   Nationality
                 </p>
               </div>
-            </div>
+            </div> {% endcomment %}
           </div>
         </div>
       </div>
