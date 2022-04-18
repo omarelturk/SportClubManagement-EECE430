@@ -7,31 +7,78 @@
   <link rel="stylesheet" href="{% static 'scms_app/css/Fixtures.css' %}" media="screen"/>
 
 
+  <style>
+    .divs{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-top:3%;
+    }
+
+    .opponent-card{
+      background: #fcece3;
+      border-radius: 25px;
+    }
+  </style>
+
     <section class="u-align-center u-clearfix u-section-1" id="sec-bc9e">
       <div class="u-align-left u-clearfix u-sheet u-sheet-1">
-        <div class="h2-div">
-          <h2 class="u-text u-text-default u-text1">Football - Upcoming Fixtures</h2>
-          <h2 class="u-text u-text-default u-text2">Basketball - Upcoming Fixtures</h2>
-        </div>
-        <div class="u-border-1 u-border-grey-dark-1 u-line u-line-horizontal u-line-2"></div>
-        <div class="u-border-1 u-border-grey-dark-1 u-line u-line-horizontal u-line-3"></div>
-        <div class="u-border-3 u-border-grey-dark-1 u-line u-line-vertical u-line-1"></div>
-        <div class="u-list u-list-1">
-          <div class="u-repeater u-repeater-1">
+        <div class="divs">
+          
+          <div>
 
+            <h2 class="u-text u-text-default u-text1">Football - Upcoming Fixtures</h2>
+            <div class="u-border-1 u-border-grey-dark-1 u-line u-line-horizontal u-line-3"></div>
 
-            {% for ticket in tickets %}
-              <div class="u-container-style u-list-item u-repeater-item">
-                <div class="u-container-layout u-similar-container u-valign-top u-container-layout-1"><span class="u-file-icon u-icon u-icon-1"><img src={{ticket.ticket_image}} alt=""></span>
-                  <ul class="u-text u-text-3">
-                    <li>Opponents: {{ticket.ticket_opponent}}</li>
-                    <li>Location: {{ticket.ticket_location}}</li>
-                    <li>Date: {{ticket.ticket_date}}</li>
-                  </ul>
-                  <a href="" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1">Buy Tickets</a>
-                </div>
+            <div class="u-list u-list-1">
+              <div class="u-repeater u-repeater-1">
+    
+    
+                {% for fticket in ftickets %}
+                  <div class="u-container-style u-list-item u-repeater-item opponent-card">
+                    <div class="u-container-layout u-similar-container u-valign-top u-container-layout-1"><span class="u-file-icon u-icon u-icon-1"><img src={{fticket.football_ticket_image}} alt=""></span>
+                      <ul class="u-text u-text-3">
+                        <li>Opponents: {{fticket.football_ticket_opponent}}</li>
+                        <li>Location: {{fticket.football_ticket_location}}</li>
+                        <li>Date: {{fticket.football_ticket_date}}</li>
+                      </ul>
+                    </div>
+                  </div>
+                {% endfor %}
+
               </div>
-            {% endfor %}
+            </div>
+
+          </div>
+
+        <div>
+
+          <h2 class="u-text u-text-default u-text2">Basketball - Upcoming Fixtures</h2>
+          <div class="u-border-1 u-border-grey-dark-1 u-line u-line-horizontal u-line-2"></div>
+
+          <div class="u-list u-list-2">
+            <div class="u-repeater u-repeater-2">
+  
+              {% for bticket in btickets %}
+                <div class="u-container-style u-list-item u-repeater-item opponent-card">
+                  <div class="u-container-layout u-similar-container u-valign-top u-container-layout-1"><span class="u-file-icon u-icon u-icon-1"><img src={{bticket.basketball_ticket_image}} alt=""></span>
+                    <ul class="u-text u-text-3">
+                      <li>Opponents: {{bticket.basketball_ticket_opponent}}</li>
+                      <li>Location: {{bticket.basketball_ticket_location}}</li>
+                      <li>Date: {{bticket.basketball_ticket_date}}</li>
+                    </ul>
+                  </div>
+                </div>
+              {% endfor %}
+
+            </div>
+          </div>
+
+        </div>
+      
+        
+        
+        
 
             {% comment %} <div class="u-container-style u-list-item u-repeater-item">
               <div class="u-container-layout u-similar-container u-valign-top u-container-layout-1"><span class="u-file-icon u-icon u-icon-1"><img src="{% static 'scms_app/images/861535.png' %}" alt=""></span>
@@ -73,23 +120,8 @@
                 <a href="https://nicepage.com/k/presentation-html-templates" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-4">Buy Tickets</a>
               </div>
             </div> {% endcomment %}
-          </div>
-        </div>
-        <div class="u-list u-list-2">
-          <div class="u-repeater u-repeater-2">
-
-            {% for ticket in tickets %}
-              <div class="u-container-style u-list-item u-repeater-item">
-                <div class="u-container-layout u-similar-container u-valign-top u-container-layout-1"><span class="u-file-icon u-icon u-icon-1"><img src={{ticket.ticket_image}} alt=""></span>
-                  <ul class="u-text u-text-3">
-                    <li>Opponents: {{ticket.ticket_opponent}}</li>
-                    <li>Location: {{ticket.ticket_location}}</li>
-                    <li>Date: {{ticket.ticket_date}}</li>
-                  </ul>
-                  <a href="" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1">Buy Tickets</a>
-                </div>
-              </div>
-            {% endfor %}
+          
+        
 
             {% comment %} <div class="u-container-style u-list-item u-repeater-item">
               <div class="u-container-layout u-similar-container u-valign-top u-container-layout-5"><span class="u-file-icon u-icon u-icon-5"><img src="{% static 'scms_app/images/2070373.png' %}" alt=""></span>
