@@ -19,7 +19,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 import netifaces as ni
-from scms_app.models import Football_Player, Basketball_Player, Football_Ticket, Basketball_Ticket
+from scms_app.models import Football_Player, Basketball_Player, Football_Ticket, Basketball_Ticket, Profile
 
 
 from .models import *
@@ -32,8 +32,10 @@ def register_request(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            #login(request, user)
+            form.save()
+            user = User.objects.get(username=form.cleaned_data.get('username'))
+            profile = Profile(username_id=user.id, balance=0)
+            profile.save()
             messages.success(request, "Registration successful.")
             return redirect("Signin.html")
         messages.error(request, "Unsuccessful registration. Invalid information.")
@@ -108,15 +110,25 @@ def password_reset_request(request):
 ###############################################################################################
 
 def Home(request):
-    return render(request, 'Home.html', {})
+    context={}
+    if request.method == 'GET':
+        profiles = Profile.objects.all()
+        context['profiles'] = profiles
+        return render(request, 'Home.html', context)
 
 
 def About(request):
-    return render(request, 'About.html', {})
+    context={}
+    profiles = Profile.objects.all()
+    context['profiles'] = profiles
+    return render(request, 'About.html', context)
 
 
 def StadiumMuseum(request):
-    return render(request, 'StadiumMuseum.html', {})
+    context={}
+    profiles = Profile.objects.all()
+    context['profiles'] = profiles
+    return render(request, 'StadiumMuseum.html', context)
 
 
 def TeamsB(request):
@@ -124,6 +136,8 @@ def TeamsB(request):
     if request.method == 'GET':
         bplayers = Basketball_Player.objects.all()
         context['players'] = bplayers
+        profiles = Profile.objects.all()
+        context['profiles'] = profiles
         return render(request, 'TeamsB.html', context)
 
 
@@ -132,6 +146,8 @@ def TeamsF(request):
     if request.method == 'GET':
         fplayers = Football_Player.objects.all()
         context['players'] = fplayers
+        profiles = Profile.objects.all()
+        context['profiles'] = profiles
         return render(request, 'TeamsF.html', context)
             
             # else:
@@ -145,6 +161,8 @@ def Fixtures(request):
         btickets = Basketball_Ticket.objects.all()
         context["ftickets"] = ftickets
         context["btickets"] = btickets
+        profiles = Profile.objects.all()
+        context['profiles'] = profiles
         return render(request, 'Fixtures.html', context)
     
 
@@ -155,10 +173,18 @@ def Tickets(request):
         btickets = Basketball_Ticket.objects.all()
         context["ftickets"] = ftickets
         context["btickets"] = btickets
+        profiles = Profile.objects.all()
+        context['profiles'] = profiles
         return render(request, 'Tickets.html', context)
 
 def Shop(request):
-    return render(request, 'Shop.html', {})
+    context={}
+    profiles = Profile.objects.all()
+    context['profiles'] = profiles
+    return render(request, 'Shop.html', context)
 
 def News(request):
-    return render(request, 'News.html', {})    
+    context={}
+    profiles = Profile.objects.all()
+    context['profiles'] = profiles
+    return render(request, 'News.html', context)    

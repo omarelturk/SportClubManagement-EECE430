@@ -43,6 +43,21 @@
       .span-un{
         text-transform: uppercase;
       }
+
+      .nav-flex{
+        display:flex; 
+        flex-direction:row; 
+        justify-content:flex-start; 
+        gap:50px;
+      }
+
+      .profile-div{
+        display:flex; 
+        flex-direction:column-reverse; 
+        justify-content: center; 
+        align-items: center;
+        margin-left:10%;
+      }
     </style>
 
     <meta name="generator" content="Nicepage 4.8.2, nicepage.com" />
@@ -56,6 +71,8 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i"
     />
+
+    <link rel="stylesheet" href="{% static 'scms_app/css/navbar-profile.css' %}" media="screen"/>
 
     <script type="application/ld+json">
       {
@@ -78,7 +95,7 @@
       class="u-clearfix u-custom-color-3 u-header u-sticky u-sticky-9038 u-header"
       id="sec-2308"
     > 
-    <div style="display:flex; flex-direction:row; justify-content:space-around;">
+    <div class="nav-flex">
       {% comment %} <div style="display:flex; flex-direction:column; justify-content:center;"> {% endcomment %}
         <a
           href=""
@@ -289,37 +306,49 @@
         </nav>
       {% comment %} </div> {% endcomment %}
       {% if user.is_authenticated %}
-          <div style="display:flex; flex-direction:column; justify-content: center; align-items: center;">
-          <div>
-            <span class="span-login">Welcome,&nbsp<span class="span-un">{{user.username}}</span>
-          </div>
-          <div>
-            <span><a class="nav-a" href="/logout">
-            <button class="button button2">Logout</button></a>
-          </div>
-            </span>
-          </div>
-          {%else%}
-          <div style="display:flex; flex-direction:row; gap:10px; align-items:center;">
-          <div>
-              <a
-                href="Signup.html"
-                data-page-id="902517574"
-                class="nav-a"
-                >
-                <button class="button button2">Register</button>
-              </a>
-          </div>
-          <div>
-              <a
-              href="Signin.html"
-              data-page-id="112907359"
-              class="nav-a"
-              ><button class="button button2">Sign in</button>
-              </a>
-          </div>
-          {%endif%}
+            {% for profile in profiles %}
+              {% if profile.username_id == user.id %}
+                <div class="profile-div">
+                  <div class="dropdown">
+                    <span class="span-login drop-btn">Welcome,&nbsp<span class="span-un">{{user.username}}</span>
+                    <div class="dropdown-content">
+                      <a href="">My Profile</a>
+                      <a href="/logout">Sign Out</a>
+                    </div>
+                  </div>
+                  <div>
+                    {% comment %} <span><a class="nav-a" href="/logout">
+                    <button class="button button2">Logout</button></a>
+                    </span> {% endcomment %}
+                    <span>BAL: {{profile.balance}} $</span>
+                  </div>
+                  </div> 
+                </div>
+              {% endif %}
+            {% endfor %}
+      {%else%}
+      <div style="display:flex; flex-direction:row; gap:10px; align-items:center;">
+      <div>
+          <a
+            href="Signup.html"
+            data-page-id="902517574"
+            class="nav-a"
+            >
+            <button class="button button2">Register</button>
+          </a>
       </div>
+      <div>
+          <a
+          href="Signin.html"
+          data-page-id="112907359"
+          class="nav-a"
+          ><button class="button button2">Sign in</button>
+          </a>
+      </div>
+      
+      {%endif%}
+  </div>
+      
 
         
 
