@@ -19,7 +19,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 import netifaces as ni
-from scms_app.models import Football_Player, Basketball_Player, Ticket
+from scms_app.models import Football_Player, Basketball_Player, Football_Ticket, Basketball_Ticket
 
 
 from .models import *
@@ -141,16 +141,20 @@ def TeamsF(request):
 def Fixtures(request):
     context={}
     if request.method == 'GET':
-        tickets = Ticket.objects.all()
-        context["tickets"] = tickets
+        ftickets = Football_Ticket.objects.all()
+        btickets = Basketball_Ticket.objects.all()
+        context["ftickets"] = ftickets
+        context["btickets"] = btickets
         return render(request, 'Fixtures.html', context)
     
 
 def Tickets(request):
     context={}
     if request.method == 'GET':
-        tickets = Ticket.objects.all()
-        context["tickets"] = tickets
+        ftickets = Football_Ticket.objects.all()
+        btickets = Basketball_Ticket.objects.all()
+        context["ftickets"] = ftickets
+        context["btickets"] = btickets
         return render(request, 'Tickets.html', context)
 
 def Shop(request):

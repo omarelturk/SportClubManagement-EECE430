@@ -14,9 +14,9 @@
         gap:20px;
         background-color: #fcece3;
       }
-
+      
       .div-ticket:third-child{
-        width: 200px;
+        width:500px;
       }
 
       .div-ticket > * {
@@ -24,7 +24,7 @@
       }
 
       .div-ticket-b{
-        gap: 30px;
+
       }
 
       .opponent-f{
@@ -74,6 +74,8 @@
         display: flex;
         align-items: center;
         flex-direction: column;
+        margin-right:40px;
+        margin-left:22px;
       }
 
       .purchase-f{
@@ -104,8 +106,8 @@
 
       #basketball-id{
         position:absolute;
-        top:59%;
-        right:25%;
+        top:18%;
+        left:30%;
       }
 
     </style>
@@ -120,7 +122,7 @@
         <div id="football-id" class="u-list u-list-1">
           <div class="u-repeater u-repeater-1">
 
-            {% for ticket in tickets %}
+            {% for fticket in ftickets %}
             <div class="u-border-3 u-border-grey-75 u-container-style u-list-item u-radius-20 u-repeater-item u-shape-round">
               <div class="u-container-layout u-similar-container u-container-layout-1 div-ticket">
               
@@ -129,21 +131,21 @@
                 </div> {% endcomment %}
                 
                 <div class="opponent-badge-f">
-                <img class="u-image u-image-circle u-image-1" src={{ticket.ticket_image}} alt="" data-image-width="1406" data-image-height="1395">
-                <h3>{{ticket.ticket_homeaway}}</h3>
+                <img class="u-image u-image-circle u-image-1" src={{fticket.football_ticket_image}} alt="" data-image-width="1406" data-image-height="1395">
+                <h3>{{fticket.football_ticket_homeaway}}</h3>
                 </div>
 
                 <div class="u-border-3 u-border-grey-dark-1 u-line u-line-vertical u-line-2"></div>
 
                 <div class="opponent-f">
                 <div class="opponent-p">
-                  <p class="u-large-text u-text u-text-default u-text-variant u-text-4">{{ticket.ticket_opponent}}</p>
+                  <p class="u-large-text u-text u-text-default u-text-variant u-text-4">{{fticket.football_ticket_opponent}}</p>
                 </div>
                 <div class="opponent-p">
-                  <p class="u-large-text u-text u-text-default u-text-variant u-text-6"><span style="text-decoration:underline;">Location</span>: {{ticket.ticket_location}}</p>
+                  <p class="u-large-text u-text u-text-default u-text-variant u-text-6"><span style="text-decoration:underline;">Location</span>: {{fticket.football_ticket_location}}</p>
                 </div>
                 <div class="opponent-p">
-                  <p class="u-large-text u-text u-text-default u-text-variant u-text-8">{{ticket.ticket_date}}</p>
+                  <p class="u-large-text u-text u-text-default u-text-variant u-text-8">{{fticket.football_ticket_date}}</p>
                 </div>
                 </div>
 
@@ -151,8 +153,8 @@
                 
                 <div class="purchase-f">
                 <div style="text-align: -webkit-center;">
-                  <p class="u-large-text u-text u-text-default u-text-variant u-text-3">Available: {{ticket.ticket_count}}</p>
-                  <p class="u-large-text u-text u-text-default u-text-variant u-text-7">Price: {{ticket.ticket_price}}$</p>
+                  <p class="u-large-text u-text u-text-default u-text-variant u-text-3">Available: {{fticket.football_ticket_count}}</p>
+                  <p class="u-large-text u-text u-text-default u-text-variant u-text-7">Price: {{fticket.football_ticket_price}}$</p>
                 </div>
                 <div style="align-self: center;">
                   <a href="" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1 purchase-btn">Purchase</a>
@@ -225,7 +227,7 @@
         <div id="basketball-id" class="u-list u-list-2" style="visibility:hidden;">
           <div class="u-repeater u-repeater-2">
             
-            {% for ticket in tickets %}
+            {% for bticket in btickets %}
             <div class="u-border-3 u-border-grey-75 u-container-style u-list-item u-radius-20 u-repeater-item u-shape-round">
               <div class="u-container-layout u-similar-container u-container-layout-1 div-ticket div-ticket-b">
               
@@ -241,18 +243,18 @@
                 </div>
                 <span style="align-self:center;"> VS </span>
                 <div class="opponent-badge-name-b">
-                  <img class="u-image u-image-circle u-image-1" src={{ticket.ticket_image}} alt="" data-image-width="1406" data-image-height="1395">
-                  <p class="u-large-text u-text u-text-default u-text-variant u-text-4">{{ticket.ticket_opponent}}</p>
+                  <img class="u-image u-image-circle u-image-1" src={{bticket.basketball_ticket_image}} alt="" data-image-width="1406" data-image-height="1395">
+                  <p class="u-large-text u-text u-text-default u-text-variant u-text-4">{{bticket.basketball_ticket_opponent}}</p>
                 </div>
                 </div>
 
                 <div class="opponent-b">
                 <div class="opponent-b-last2">
                   <div class="opponent-p">
-                    <p class=""><span style="text-decoration:underline;">Location</span>: {{ticket.ticket_location}}</p>
+                    <p class=""><span style="text-decoration:underline;">Location</span>: {{bticket.basketball_ticket_location}}</p>
                   </div>
                   <div class="opponent-p">
-                    <p class=""> {{ticket.ticket_date}}</p>
+                    <p class="">({{bticket.basketball_ticket_date}})</p>
                   </div>
                 </div>
                 </div>
@@ -262,8 +264,8 @@
                 
                 <div class="purchase-b">
                 <div style="text-align: -webkit-center;">
-                  <p class="u-large-text u-text u-text-default u-text-variant u-text-3">Available: {{ticket.ticket_count}}</p>
-                  <p class="u-large-text u-text u-text-default u-text-variant u-text-7">Price: {{ticket.ticket_price}}$</p>
+                  <p class="u-large-text u-text u-text-default u-text-variant u-text-3">Available: {{bticket.basketball_ticket_count}}</p>
+                  <p class="u-large-text u-text u-text-default u-text-variant u-text-7">Price: {{bticket.basketball_ticket_price}}$</p>
                 </div>
                 <div style="align-self: center;">
                   <a href="" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1 purchase-btn">Purchase</a>

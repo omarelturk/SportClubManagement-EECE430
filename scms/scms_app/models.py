@@ -48,21 +48,36 @@ class Basketball_Player(models.Model):
         verbose_name = "Basketball_Player"
         verbose_name_plural = "Basketball_Players"
 
-class Ticket(models.Model):
-    ticket_opponent = models.CharField(max_length=100)
-    ticket_homeaway = models.CharField(max_length=100 ,choices=HOMEAWAY)
-    ticket_location = models.CharField(max_length=100)
-    ticket_date = models.DateTimeField()
-    ticket_price = models.IntegerField()
-    ticket_count = models.IntegerField()
-    ticket_image = models.ImageField(upload_to="static/scms_app/images")
+class Football_Ticket(models.Model):
+    football_ticket_opponent = models.CharField(max_length=100)
+    football_ticket_homeaway = models.CharField(max_length=100 ,choices=HOMEAWAY)
+    football_ticket_location = models.CharField(max_length=100)
+    football_ticket_date = models.DateTimeField()
+    football_ticket_price = models.IntegerField()
+    football_ticket_count = models.IntegerField()
+    football_ticket_image = models.ImageField(upload_to="static/scms_app/images")
 
     def __str__(self):
-        return self.ticket_opponent
+        return self.football_ticket_opponent
 
     class Meta:
-        verbose_name = "Ticket"
-        verbose_name_plural = "Tickets"
+        verbose_name = "Football_Ticket"
+        verbose_name_plural = "Football_Tickets"
+
+class Basketball_Ticket(models.Model):
+    basketball_ticket_opponent = models.CharField(max_length=100)
+    basketball_ticket_location = models.CharField(max_length=100)
+    basketball_ticket_date = models.DateTimeField()
+    basketball_ticket_price = models.IntegerField()
+    basketball_ticket_count = models.IntegerField()
+    basketball_ticket_image = models.ImageField(upload_to="static/scms_app/images")
+
+    def __str__(self):
+        return self.basketball_ticket_opponent
+
+    class Meta:
+        verbose_name = "Basketball_Ticket"
+        verbose_name_plural = "Basketball_Tickets"
 
 class Profile(models.Model):
     username = models.OneToOneField(User, on_delete=models.CASCADE)
