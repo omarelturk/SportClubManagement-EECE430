@@ -91,13 +91,33 @@
         margin-top:0;
       }
 
+      .switch-sport-btn{
+        background-color:#478ac9;
+        margin-top:1%;
+      }
+
+      #football-id{
+        position:absolute;
+        top:15%;
+        left: 30%;
+      }
+
+      #basketball-id{
+        position:absolute;
+        top:59%;
+        right:25%;
+      }
+
     </style>
 
     <section class="u-clearfix u-section-1" id="sec-d7cb">
       <div class="u-align-left u-clearfix u-sheet u-sheet-1">
-        <h2 class="u-text u-text-default u-text-1">Football Tickets</h2>
-        <h2 class="u-text u-text-default u-text-2">Basketball Tickets</h2>
-        <div class="u-list u-list-1">
+        <button id="basketballButton" class="btn btn-primary switch-sport-btn" type="submit" onclick="toggleSport()">Show Basketball Tickets</button>
+        <button id="footballButton" class="btn btn-primary switch-sport-btn" type="submit" onclick="toggleSport()" disabled>Show Football Tickets</button>
+        <h2 id="football-header" class="u-text u-text-default u-text-1">Football Tickets</h2>
+        {% comment %} <h2 id="basketball-header" class="u-text u-text-default u-text-2" style="visibility:hidden;">Basketball Tickets</h2> {% endcomment %}
+
+        <div id="football-id" class="u-list u-list-1">
           <div class="u-repeater u-repeater-1">
 
             {% for ticket in tickets %}
@@ -202,7 +222,7 @@
             </div>{% endcomment %}
           </div>
         </div> 
-        <div class="u-list u-list-2">
+        <div id="basketball-id" class="u-list u-list-2" style="visibility:hidden;">
           <div class="u-repeater u-repeater-2">
             
             {% for ticket in tickets %}
@@ -216,8 +236,8 @@
               <div class="opponent-badge-p-b">
                 <div class="opponent-badge-b">
                 <div class="opponent-badge-name-b">
-                  <img class="u-image u-image-circle u-image-1" src={{ticket.ticket_image}} alt="" data-image-width="1406" data-image-height="1395">
-                  <p class="u-large-text u-text u-text-default u-text-variant u-text-4">{{ticket.ticket_opponent}}</p>
+                  <img class="u-image u-image-circle u-image-1" src={% static 'scms_app/images/aub_phoenix.jpeg' %} alt="" data-image-width="1406" data-image-height="1395">
+                  <p class="u-large-text u-text u-text-default u-text-variant u-text-4">AUB Phoenix</p>
                 </div>
                 <span style="align-self:center;"> VS </span>
                 <div class="opponent-badge-name-b">
@@ -311,5 +331,40 @@
         </div>
       </div>
     </section>
+
+
+
+    <script>
+      function toggleSport() {
+        var basketball_id = document.getElementById('basketball-id');
+        var football_id = document.getElementById('football-id');
+
+        var basketball_header = document.getElementById('basketball-header');
+        var football_header = document.getElementById('football-header');
+
+        var basketballButton = document.getElementById('basketballButton');
+        var footballButton = document.getElementById('footballButton');
+
+        if (basketball_id.style.visibility !== 'hidden') {
+          basketball_id.style.visibility = 'hidden';
+          football_id.style.visibility = 'visible';
+          football_header.style.visibility = 'visible';
+          football_header.innerHTML = 'Football Tickets';
+          basketballButton.disabled = false;
+          footballButton.disabled = true;
+        }
+        else if (football_id.style.visibility !== 'hidden') {
+          basketball_id.style.visibility = 'visible';
+          football_id.style.visibility = 'hidden';
+          football_header.style.visibility = 'visible';
+          football_header.innerHTML = 'Basketball Tickets';
+          footballButton.disabled = false;
+          basketballButton.disabled = true;
+        }
+      };
+    </script>
+
+
+
     {% endblock %}
 </html>

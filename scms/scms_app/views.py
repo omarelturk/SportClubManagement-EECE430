@@ -139,7 +139,12 @@ def TeamsF(request):
         
 
 def Fixtures(request):
-    return render(request, 'Fixtures.html', {})
+    context={}
+    if request.method == 'GET':
+        tickets = Ticket.objects.all()
+        context["tickets"] = tickets
+        return render(request, 'Fixtures.html', context)
+    
 
 def Tickets(request):
     context={}

@@ -18,7 +18,22 @@
         <div class="u-border-3 u-border-grey-dark-1 u-line u-line-vertical u-line-1"></div>
         <div class="u-list u-list-1">
           <div class="u-repeater u-repeater-1">
-            <div class="u-container-style u-list-item u-repeater-item">
+
+
+            {% for ticket in tickets %}
+              <div class="u-container-style u-list-item u-repeater-item">
+                <div class="u-container-layout u-similar-container u-valign-top u-container-layout-1"><span class="u-file-icon u-icon u-icon-1"><img src={{ticket.ticket_image}} alt=""></span>
+                  <ul class="u-text u-text-3">
+                    <li>Opponents: {{ticket.ticket_opponent}}</li>
+                    <li>Location: {{ticket.ticket_location}}</li>
+                    <li>Date: {{ticket.ticket_date}}</li>
+                  </ul>
+                  <a href="" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1">Buy Tickets</a>
+                </div>
+              </div>
+            {% endfor %}
+
+            {% comment %} <div class="u-container-style u-list-item u-repeater-item">
               <div class="u-container-layout u-similar-container u-valign-top u-container-layout-1"><span class="u-file-icon u-icon u-icon-1"><img src="{% static 'scms_app/images/861535.png' %}" alt=""></span>
                 <ul class="u-text u-text-3">
                   <li>Opponents: ENEMY</li>
@@ -57,12 +72,26 @@
                 </ul>
                 <a href="https://nicepage.com/k/presentation-html-templates" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-4">Buy Tickets</a>
               </div>
-            </div>
+            </div> {% endcomment %}
           </div>
         </div>
         <div class="u-list u-list-2">
           <div class="u-repeater u-repeater-2">
-            <div class="u-container-style u-list-item u-repeater-item">
+
+            {% for ticket in tickets %}
+              <div class="u-container-style u-list-item u-repeater-item">
+                <div class="u-container-layout u-similar-container u-valign-top u-container-layout-1"><span class="u-file-icon u-icon u-icon-1"><img src={{ticket.ticket_image}} alt=""></span>
+                  <ul class="u-text u-text-3">
+                    <li>Opponents: {{ticket.ticket_opponent}}</li>
+                    <li>Location: {{ticket.ticket_location}}</li>
+                    <li>Date: {{ticket.ticket_date}}</li>
+                  </ul>
+                  <a href="" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1">Buy Tickets</a>
+                </div>
+              </div>
+            {% endfor %}
+
+            {% comment %} <div class="u-container-style u-list-item u-repeater-item">
               <div class="u-container-layout u-similar-container u-valign-top u-container-layout-5"><span class="u-file-icon u-icon u-icon-5"><img src="{% static 'scms_app/images/2070373.png' %}" alt=""></span>
                 <ul class="u-text u-text-7">
                   <li>Opponents: ENEMY</li>
@@ -102,7 +131,7 @@
                 <a href="https://nicepage.com/k/presentation-html-templates" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-8">Buy Tickets</a>
               </div>
             </div>
-          </div>
+          </div> {% endcomment %}
         </div>
       </div>
     </section>
