@@ -55,12 +55,19 @@
               method="POST"
               style="padding: 50px; text-align: left"
               name="form"
+              enctype="multipart/form-data"
             >
               {% csrf_token %} 
               
               {{register_form|crispy}} 
 
-              <select name="users_type" id="users_type" style="width:100%; margin-bottom:10px;">
+              <label for="userImage" class="form-label">User Profile Image</label>
+              <input type="file" class="form-control" name="userImage" accept="image/*">
+
+              <br>
+
+              <label for="users_type" class="form-label">User Type</label>
+              <select class="form-select" name="users_type" id="users_type" style="width:100%; margin-bottom:10px;">
                 <option value="normaluser">User</option>
                 <option value="staffuser">Staff</option>
               </select>

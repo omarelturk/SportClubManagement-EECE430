@@ -41,14 +41,35 @@ elif platform == "win32":
 
 def register_request(request):
 	if request.method == "POST":
-		form = NewUserForm(request.POST)
+		form = NewUserForm(request.POST, request.FILES)
 		user_select = request.POST["users_type"]
 		if user_select == "normaluser":
 			if form.is_valid():
+				formusername = form.cleaned_data.get('username')
+				formaddress = form.cleaned_data.get('address')
 				form.save()
-				user = User.objects.get(username=form.cleaned_data.get('username'))
-				profile = Profile(username_id=user.id, balance=0)
-				profile.save()
+
+				print("LOOOK HHEREEEEEE")
+				print(request.FILES)
+
+				userImageExist = request.FILES.get('userImage', False)
+				if userImageExist is True:
+					userImage = request.FILES['userImage']
+					fss = FileSystemStorage()
+					file = fss.save(userImage.name, userImage)
+					file_url = fss.url(file)
+				else:
+					file_url = None
+
+				user = User.objects.get(username=formusername)
+
+				if file_url is None:
+					profile = Profile(username_id=user.id, address=formaddress, balance=0)
+					profile.save()
+				else:
+					profile = Profile(username_id=user.id, userimage=file_url, address=formaddress, balance=0)
+					profile.save()
+
 				messages.success(request, "Registration successful.")
 				return redirect("Signin.html")
 		else:
@@ -70,7 +91,12 @@ def register_request(request):
 def login_request(request):
 	if request.method == "POST":
 		form = AuthenticationForm(request, data=request.POST)
-		user = User.objects.get(username=request.POST["username"])
+		if User.objects.filter(username=request.POST["username"]).exists():
+			user = User.objects.get(username=request.POST["username"])
+		else:
+			print("MESSAGE SHOULD SHOW")
+			messages.warning(request, "User Does Not Exist!")
+			return redirect("Signin.html")
 		print(user.is_staff)
 		if user.is_staff is False:
 			if form.is_valid():
@@ -393,6 +419,82 @@ def buyBasketballTicket(request):
 	btickets = Basketball_Ticket.objects.all()
 	context['btickets'] = btickets
 	return redirect("Tickets.html", context=context)
+
+
+
+# FOR ACCOUNTS AND PROFILE
+
+def changeProfileImage(request):
+	context={}
+	if request.method == "POST":
+		print("CHECKKKK")
+		userId = request.session.get('_auth_user_id')
+		profileupdate = Profile.objects.filter(username_id=userId)
+
+		roundimgExist = request.FILES.get('profileImage', False)
+		backimgExist = request.FILES.get('profileBackgroundImage', False)
+		fss = FileSystemStorage()
+
+		if (roundimgExist) and not(backimgExist):
+			roundimg = request.FILES['profileImage']
+			if fss.exists(roundimg.name):
+				file1_url = fss.url(roundimg.name)
+				profileupdate.update(
+					userimage=file1_url
+				)
+			else:
+				print("INHEREEEEEEE1111")
+				file1 = fss.save(roundimg.name, roundimg)
+				file1_url = fss.url(file1)
+				profileupdate.update(
+					userimage=file1_url
+				)
+
+		elif (backimgExist) and not(roundimgExist):
+			backimg = request.FILES['profileBackgroundImage']
+			if fss.exists(backimg.name):
+				file2_url = fss.url(backimg.name)
+				profileupdate.update(
+					userbackimage=file2_url
+				)
+			else:
+				print("INHEREEEEEEE2222")
+				file2 = fss.save(backimg.name, backimg)
+				file2_url = fss.url(file2)
+				profileupdate.update(
+					userbackimage=file2_url
+				)
+		elif (backimgExist) and (roundimgExist):
+			roundimg = request.FILES['profileImage']
+			backimg = request.FILES['profileBackgroundImage']
+			if fss.exists(roundimg.name) and fss.exists(backimg.name):
+				file1_url = fss.url(roundimg.name)
+				file2_url = fss.url(backimg.name)
+				profileupdate.update(
+					userimage=file1_url,
+					userbackimage=file2_url
+				)
+			else:
+				print("INHEREEEEEEE33333")
+				file1 = fss.save(roundimg.name, roundimg)
+				file1_url = fss.url(file1)
+				file2 = fss.save(backimg.name, backimg)
+				file2_url = fss.url(file2)
+				profileupdate.update(
+					userimage=file1_url,
+					userbackimage=file2_url
+				)
+		else:
+			print("NOT WORKING")
+			profiles = Profile.objects.all()
+			context['profile'] = profiles
+			return redirect("userProfile.html", context=context)
+
+	profiles = Profile.objects.all()
+	context['profile'] = profiles
+	return redirect("userProfile.html", context=context)
+
+
 
 def deleteAccount(request):
 	if request.method == "POST":

@@ -55,14 +55,16 @@
           {%for message in messages%}
             {%if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS%}
               <div class="alert {{message.tags}} alert-dismissible fade show" role="alert" id="message_box">
-                {% comment %} <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button> {% endcomment %}
+                {{message}}
+              </div>
+            {%endif%}
+            {%if message.level == DEFAULT_MESSAGE_LEVELS.WARNING%}
+              <div class="alert {{message.tags}} alert-dismissible fade show" role="alert" id="message_box">
                 {{message}}
               </div>
             {%endif%}
           {%endfor%}
-        {%endif%}
+        {% endif %}
 
         <div class="form-login">
           <div class="inside-form-login">

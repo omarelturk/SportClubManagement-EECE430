@@ -1,5 +1,8 @@
+from email.policy import default
 from django.db import models
 from django.contrib.auth.models import User
+from scms_app.storage import OverwriteStorage
+
 
 POSITION1 = [
     ('Forward', 'Forward'),
@@ -22,7 +25,10 @@ HOMEAWAY = [
 # Create your models here.
 class Profile(models.Model):
     username = models.OneToOneField(User, on_delete=models.CASCADE)
-    balance = models.IntegerField()
+    balance = models.IntegerField(default=0)
+    address = models.CharField(max_length=100, default="")
+    userimage = models.ImageField(storage=OverwriteStorage(), default="scms_app/media/default-user.jpg")
+    userbackimage = models.ImageField(storage=OverwriteStorage(), default="scms_app/media/default-back-user.jpg")
 
     def __str__(self):
         return str(self.username)

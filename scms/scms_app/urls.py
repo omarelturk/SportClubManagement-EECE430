@@ -25,6 +25,7 @@ urlpatterns = [
     path('removeFootballPlayer', views.removeFootballPlayer, name='removeFootballPlayer'),
     path('updateFootballPlayer', views.updateFootballPlayer, name='updateFootballPlayer'),
     path('buyBasketballTicket', views.buyBasketballTicket, name='buyBasketballTicket'),
+    path('changeProfileImage', views.changeProfileImage, name='changeProfileImage'),
     path('deleteAccount', views.deleteAccount, name='deleteAccount'),
     # path('getBasketballPlayerId', views.getBasketballPlayerId, name='getBasketballPlayerId'),
 ]
