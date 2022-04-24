@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html style="font-size: 16px;">
+    {% block content %}
+    <link
+      rel="stylesheet"
+      href="{% static 'scms_app/css/userProfile.css' %}"
+      media="screen"
+    />
+
+    <style>
+      .big-box{
+        border-style: solid;
+        border-width: medium;
+        background-color:#fcece3;
+        border-radius: 50px 50px 0px 0px;
+      }
+      .span-un{
+        color:#dc3545;
+        background-color: white;
+        padding: 5px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        border-radius: 10px;
+      }
+    </style>
+
+    <section class="u-clearfix u-section-1" id="sec-2920">
+      <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+        <div class="u-container-style u-group u-shape-round u-group-1">
+          <div class="u-container-layout u-container-layout-1 big-box">
+            <img class="u-expanded-width u-image u-image-round u-top-left-radius-45 u-top-right-radius-45 u-image-1" src="{% static 'scms_app/images/blue-background.jpeg' %}" alt="" data-image-width="1200" data-image-height="965">
+            <div alt="" class="" src="" data-image-width="1280" data-image-height="924"><img class="u-image u-image-circle u-image-2" src="{% static 'scms_app/images/shizo-green.jpeg' %}"></img></div>
+            <h1 class="u-custom-font u-text u-text-default u-text-font u-text-1">User Profile</h1><span class="u-file-icon u-gradient u-icon u-icon-circle u-icon-1"><img src="{% static 'scms_app/images/7191087.png' %}" alt=""></span>
+            <div class="u-clearfix u-gutter-40 u-layout-wrap u-layout-wrap-1">
+              <div class="u-gutter-0 u-layout">
+                <div class="u-layout-col">
+                  <div class="u-container-style u-layout-cell u-shape-rectangle u-size-20 u-white u-layout-cell-1">
+                    <div class="u-border-2 u-border-grey-75 u-container-layout u-container-layout-2">
+                      <p class="u-large-text u-text u-text-default u-text-variant u-text-2">{{user.username}}</p>
+                    </div>
+                  </div>
+                  <div class="u-container-style u-layout-cell u-shape-rectangle u-size-20 u-white u-layout-cell-2">
+                    <div class="u-border-2 u-border-grey-75 u-container-layout u-container-layout-3">
+                      <p class="u-large-text u-text u-text-default u-text-variant u-text-3">{{user.email}}</p>
+                    </div>
+                  </div>
+                  <div class="u-container-style u-layout-cell u-shape-rectangle u-size-20 u-white u-layout-cell-3">
+                    <div class="u-border-2 u-border-grey-75 u-container-layout u-container-layout-4">
+                      {% for profile in profiles %}
+                      {% if profile.username_id == user.id %}
+                        <p class="u-large-text u-text u-text-default u-text-variant u-text-4">{{profile.balance}} $</p>
+                      {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><span class="u-file-icon u-gradient u-icon u-icon-circle u-icon-2"><img src="{% static 'scms_app/images/7286248.png' %}" alt=""></span><span class="u-file-icon u-gradient u-icon u-icon-circle u-icon-3"><img src="{% static 'scms_app/images/1077874.png' %}" alt=""></span>
+            <a href="" class="u-border-none u-btn u-btn-round u-button-style u-custom-color-1 u-hover-custom-color-4 u-radius-6 u-btn-1">Add Balance</a>
+            <span class="u-file-icon u-icon u-icon-4">
+              <img src="
+              {% static 'scms_app/images/673069.png' %}" alt="">
+            </span>
+            <a href="/passwordreset" class="u-btn u-button-style u-none u-text-hover-palette-2-base u-text-palette-1-base u-btn-2">Reset password&nbsp;<span class="u-icon u-text-palette-1-base u-icon-5"><svg class="u-svg-content" viewBox="0 -32 426.66667 426" style="width: 1em; height: 1em;"><path d="m213.332031 181.667969c0 4.265625-1.277343 8.53125-3.625 11.730469l-106.667969 160c-3.839843 5.761718-10.238281 9.601562-17.707031 9.601562h-64c-11.730469 0-21.332031-9.601562-21.332031-21.332031 0-4.269531 1.28125-8.535157 3.625-11.734375l98.773438-148.265625-98.773438-148.269531c-2.34375-3.199219-3.625-7.464844-3.625-11.730469 0-11.734375 9.601562-21.335938 21.332031-21.335938h64c7.46875 0 13.867188 3.839844 17.707031 9.601563l106.667969 160c2.347657 3.199218 3.625 7.464844 3.625 11.734375zm0 0"></path><path d="m426.667969 181.667969c0 4.265625-1.28125 8.53125-3.628907 11.730469l-106.664062 160c-3.839844 5.761718-10.242188 9.601562-17.707031 9.601562h-64c-11.734375 0-21.335938-9.601562-21.335938-21.332031 0-4.269531 1.28125-8.535157 3.628907-11.734375l98.773437-148.265625-98.773437-148.269531c-2.347657-3.199219-3.628907-7.464844-3.628907-11.730469 0-11.734375 9.601563-21.335938 21.335938-21.335938h64c7.464843 0 13.867187 3.839844 17.707031 9.601563l106.664062 160c2.347657 3.199218 3.628907 7.464844 3.628907 11.734375zm0 0"></path></svg><img></span>
+            </a>
+            <form method="POST" action="deleteAccount" style="margin-bottom: 20px;">
+              {% csrf_token %}
+              <button type="submit" class="u-border-none u-btn u-btn-round u-button-style u-custom-color-1 u-hover-custom-color-4 u-radius-6 u-btn-1">Delete Account</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    {% endblock %}
+  </body>
+</html>

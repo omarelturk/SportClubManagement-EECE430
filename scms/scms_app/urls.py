@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 
+
 urlpatterns = [
     path('', views.Home, name='Home'),
     path('About.html', views.About, name='About'),
@@ -16,7 +17,14 @@ urlpatterns = [
     path('Tickets.html', views.Tickets, name='Tickets'),
     path('Shop.html', views.Shop, name='Shop'),
     path('News.html', views.News, name='News'),
-    #path("register", views.register_request, name="register")
-    # path('/login', views.LoginView.as_view(template_name="scms_app/templates/Signin.html"), name='login'),
-    # path('/logout', views.LogoutView.as_view(), name='logout')
+    path('userProfile.html', views.userProfile, name='userProfile'),
+    path('addBasketballPlayer', views.addBasketballPlayer, name='addBasketballPlayer'),
+    path('removeBasketballPlayer', views.removeBasketballPlayer, name='removeBasketballPlayer'),
+    path('updateBasketballPlayer', views.updateBasketballPlayer, name='updateBasketballPlayer'),
+    path('addFootballPlayer', views.addFootballPlayer, name='addFootballPlayer'),
+    path('removeFootballPlayer', views.removeFootballPlayer, name='removeFootballPlayer'),
+    path('updateFootballPlayer', views.updateFootballPlayer, name='updateFootballPlayer'),
+    path('buyBasketballTicket', views.buyBasketballTicket, name='buyBasketballTicket'),
+    path('deleteAccount', views.deleteAccount, name='deleteAccount'),
+    # path('getBasketballPlayerId', views.getBasketballPlayerId, name='getBasketballPlayerId'),
 ]

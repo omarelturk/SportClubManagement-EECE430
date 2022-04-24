@@ -58,6 +58,20 @@
         align-items: center;
         margin-left:10%;
       }
+
+      .username-overflow-normal{
+        text-overflow: ellipsis;
+        overflow: hidden;
+        width: 200px;
+        white-space: nowrap;
+      }
+
+      .username-overflow-staff{
+        text-overflow: ellipsis;
+        overflow: hidden;
+        width: 115px;
+        white-space: nowrap;
+      }
     </style>
 
     <meta name="generator" content="Nicepage 4.8.2, nicepage.com" />
@@ -306,13 +320,16 @@
         </nav>
       {% comment %} </div> {% endcomment %}
       {% if user.is_authenticated %}
+        {% if 'normaluser' in request.session %}
             {% for profile in profiles %}
               {% if profile.username_id == user.id %}
                 <div class="profile-div">
                   <div class="dropdown">
-                    <span class="span-login drop-btn">Welcome,&nbsp<span class="span-un">{{user.username}}</span>
+                    <div class="username-overflow-normal">
+                      <span class="span-login drop-btn">Welcome,&nbsp<span class="span-un">{{user.username}}</span>
+                    </div>
                     <div class="dropdown-content">
-                      <a href="">My Profile</a>
+                      <a href="userProfile.html">My Profile</a>
                       <a href="/logout">Sign Out</a>
                     </div>
                   </div>
@@ -326,6 +343,24 @@
                 </div>
               {% endif %}
             {% endfor %}
+        {% elif 'staffuser' in request.session %}
+                  <div class="profile-div">
+                    <div class="dropdown">
+                        <div style="display:flex;">
+                          <div>
+                            <span class="span-login drop-btn">Welcome,&nbsp</span>
+                          </div>
+                          <div class="username-overflow-staff">
+                            <span class="span-login span-un">{{user.username}}</span>
+                          </div>
+                        </div>
+                      <div class="dropdown-content">
+                        <a href="/logout">Sign Out</a>
+                      </div>
+                    </div> 
+                  </div>
+        {% endif %}
+
       {%else%}
       <div style="display:flex; flex-direction:row; gap:10px; align-items:center;">
       <div>
@@ -348,21 +383,6 @@
       
       {%endif%}
   </div>
-      
 
-        
-
-      {% comment %} <div class="u-clearfix u-sheet u-sheet-1">
-          
-        </div> {% endcomment %}
-    </div>
-  </header>
-
-
-{% comment %} <span style="float:right">
-  {%if user.is_authenticated%}
-  {% url 'profile' as profile_url %}
-      <span>Welcome {% if request.path == profile_url%}{{user.username}}{%else%}<a href="{{profile_url}}">{{user.username}}</a>{%endif%}</span>
-      <span><a href="{% url 'logout' %}">Logout</a></span>
-  {%else%}
-      <span><a href="{% url 'login' %}">Login</a></span> {% endcomment %}
+  </div>
+</header>

@@ -20,6 +20,17 @@ HOMEAWAY = [
 ]
 
 # Create your models here.
+class Profile(models.Model):
+    username = models.OneToOneField(User, on_delete=models.CASCADE)
+    balance = models.IntegerField()
+
+    def __str__(self):
+        return str(self.username)
+
+    class Meta:
+        verbose_name = "Profile"
+        verbose_name_plural = "Profiles"
+
 class Football_Player(models.Model):
     player_name = models.CharField(max_length=100)
     player_number = models.IntegerField()
@@ -79,13 +90,24 @@ class Basketball_Ticket(models.Model):
         verbose_name = "Basketball_Ticket"
         verbose_name_plural = "Basketball_Tickets"
 
-class Profile(models.Model):
+class Football_Bought_Ticket(models.Model):
     username = models.OneToOneField(User, on_delete=models.CASCADE)
-    balance = models.IntegerField()
+    football_bought_ticket = models.OneToOneField(Football_Ticket, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.username)
+        return self.football_bought_ticket
 
     class Meta:
-        verbose_name = "Profile"
-        verbose_name_plural = "Profiles"
+        verbose_name = "Football_Bought_Ticket"
+        verbose_name_plural = "Football_Bought_Tickets"
+
+class Basketball_Bought_Ticket(models.Model):
+    username = models.OneToOneField(User, on_delete=models.CASCADE)
+    basketball_bought_ticket = models.OneToOneField(Basketball_Ticket, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.basketball_bought_ticket
+
+    class Meta:
+        verbose_name = "Basketball_Bought_Ticket"
+        verbose_name_plural = "Basketball_Bought_Tickets"

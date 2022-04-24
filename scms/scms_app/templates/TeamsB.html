@@ -16,17 +16,30 @@
       href="{% static 'scms_app/css/TeamsF.css' %}"
       media="screen"
     />
+
+    <style>
+      .add-player{
+        position: absolute;
+        right: 0%;
+        top: 3%;
+      }
+    </style>
+
+
     <section class="u-align-center u-clearfix u-section-1" id="sec-1548">
       <div class="u-clearfix u-sheet u-sheet-1">
+        <!-- Button trigger modal -->
+        {% if 'staffuser' in request.session %}
+        <button class="btn btn-primary add-player" type="submit" data-bs-toggle="modal" data-bs-target=".addBasketballPlayerClass">&plus; Add Player</button>
+        {% endif %}
+        
+
         <h1 class="u-text u-text-default u-text-1">Basketball Team</h1>
         <div
           class="u-border-3 u-border-grey-dark-1 u-expanded-width u-line u-line-horizontal u-line-1"
         ></div>
         <div class="u-expanded-width u-layout-grid u-list u-list-1">
-          <div class="u-repeater u-repeater-2"> 
-            {% comment %} u-repeater-1 instead of 2 for the fabbol {% endcomment %}
-            {% comment %} class="u-align-center u-container-style u-list-item u-repeater-item u-list-item-1" {% endcomment %}
-            {% comment %} class="u-container-layout u-similar-container u-valign-bottom u-container-layout-1" {% endcomment %}
+          <div class="u-repeater u-repeater-2">
             {% for player in players %}
             <div
             class="u-align-center u-container-style u-list-item u-repeater-item u-list-item-1"
@@ -48,12 +61,136 @@
                 {{player.player_nationality}}
               </p>
             </div>
+            {% if 'staffuser' in request.session %}
+              <div style="display:flex; flex-direction:column; gap:5px; margin-left:5px;">
+                <form method="POST" action="removeBasketballPlayer">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger" name="{{player.id}}" value="{{player.id}}"><i class="fa fa-trash"></i></button>
+                </form>
+                  <button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target=".updateBasketballPlayerClass" name="{{player.id}}" value="{{player.id}}" id="{{player.id}}" onclick="getId({{player.id}})"><i class="fa fa-edit"></i></button>
+              </div>
+            {% endif %}
           </div>
             {% endfor %}
+            {% if 'staffuser' in request.session %}
+                <!-- Modal -->
+                <div class="modal fade addBasketballPlayerClass" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add A New Player</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form method="POST" action="addBasketballPlayer" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <div class="mb-3">
+                            <label for="playerName" class="col-form-label">Player Name</label>
+                            <input type="text" class="form-control" name="playerName" id="playerName" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="playerNumber" class="col-form-label">Player Number</label>
+                            <input type="number" class="form-control" name="playerNumber" id="playerNumber" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="playerPosition" class="col-form-label">Player Position</label>
+                            <select class="form-control form-select" aria-label="Default select example" name="playerPosition" id="playerPosition" required>
+                              <option selected value="Forward">Forward</option>
+                              <option value="Center">Center</option>
+                              <option value="Guard">Guard</option>
+                            </select>
+                          </div>
+                          <div class="mb-3">
+                            <label for="playerNationality" class="col-form-label">Player Nationality</label>
+                            <input type="text" class="form-control" name="playerNationality" id="playerNationality" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="playerImage" class="form-label">Player Image</label>
+                            <input type="file" class="form-control" name="playerImage" accept="image/*">
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary" name="submitPlayer" value="submitPlayer">Add Player</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+                
+                  
+                      <!-- Modal 2 -->
+                    <div class="modal fade updateBasketballPlayerClass" id="updateBasketballModal" tabindex="-1" aria-labelledby="updateBasketballModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="updateBasketballModal">Update A Player</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <form method="POST" action="updateBasketballPlayer" enctype="multipart/form-data">
+                              {% csrf_token %}
+                              <div class="mb-3">
+                                <label for="playerName" class="col-form-label">Player Name</label>
+                                <input type="text" class="form-control" name="playerName" id="playerName" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="playerNumber" class="col-form-label">Player Number</label>
+                                <input type="number" class="form-control" name="playerNumber" id="playerNumber" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="playerPosition" class="col-form-label">Player Position</label>
+                                <select class="form-control form-select" aria-label="Default select example" name="playerPosition" id="playerPosition" required>
+                                  <option selected value="Forward">Forward</option>
+                                  <option value="Center">Center</option>
+                                  <option value="Guard">Guard</option>
+                                </select>
+                              </div>
+                              <div class="mb-3">
+                                <label for="playerNationality" class="col-form-label">Player Nationality</label>
+                                <input type="text" class="form-control" name="playerNationality" id="playerNationality" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="playerImage" class="form-label">Player Image</label>
+                                <input type="file" class="form-control" name="playerImage" accept="image/*">
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-primary" name="updateBtn" value="" id="updateBasketballPlayerBtn">Update Player</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    
+
+
+
+
+                    
+            {% endif %}
           </div>
         </div>
       </div>
     </section>
+
+
+
+
+    <script>
+      function getId(playerid){
+        openUpdateModal = document.getElementById(playerid);
+        updateBasketballPlayerBtn = document.getElementById("updateBasketballPlayerBtn");
+        console.log(openUpdateModal.value)
+        updateBasketballPlayerBtn.value = openUpdateModal.value;
+      }
+    </script>
+
     {%endblock%}
     
 </html>

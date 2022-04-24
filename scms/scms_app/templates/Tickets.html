@@ -43,8 +43,7 @@
 
       .opponent-b-last2{
         display: flex;
-        flex-direction: row;
-        gap:20px;
+        flex-direction: column;
       }
 
       .opponent-p{
@@ -110,12 +109,21 @@
         left:30%;
       }
 
+      .opponent-name{
+        width: 260px;
+      }
+
+      .opponent-name-2{
+        width: 280px;
+        text-align: center;
+      }
+
     </style>
 
     <section class="u-clearfix u-section-1" id="sec-d7cb">
       <div class="u-align-left u-clearfix u-sheet u-sheet-1">
+        <button id="footballButton" class="btn btn-primary switch-sport-btn" type="submit" onclick="toggleSport()" style="background-color:grey; border-color:grey;" disabled>Show Football Tickets</button>
         <button id="basketballButton" class="btn btn-primary switch-sport-btn" type="submit" onclick="toggleSport()">Show Basketball Tickets</button>
-        <button id="footballButton" class="btn btn-primary switch-sport-btn" type="submit" onclick="toggleSport()" disabled>Show Football Tickets</button>
         <h2 id="football-header" class="u-text u-text-default u-text-1">Football Tickets</h2>
         {% comment %} <h2 id="basketball-header" class="u-text u-text-default u-text-2" style="visibility:hidden;">Basketball Tickets</h2> {% endcomment %}
 
@@ -139,7 +147,7 @@
 
                 <div class="opponent-f">
                 <div class="opponent-p">
-                  <p class="u-large-text u-text u-text-default u-text-variant u-text-4">{{fticket.football_ticket_opponent}}</p>
+                  <p class="u-large-text u-text u-text-default u-text-variant u-text-4 opponent-name">{{fticket.football_ticket_opponent}}</p>
                 </div>
                 <div class="opponent-p">
                   <p class="u-large-text u-text u-text-default u-text-variant u-text-6"><span style="text-decoration:underline;">Location</span>: {{fticket.football_ticket_location}}</p>
@@ -155,9 +163,13 @@
                 <div style="text-align: -webkit-center;">
                   <p class="u-large-text u-text u-text-default u-text-variant u-text-3">Available: {{fticket.football_ticket_count}}</p>
                   <p class="u-large-text u-text u-text-default u-text-variant u-text-7">Price: {{fticket.football_ticket_price}}$</p>
+                  <p class="u-large-text u-text u-text-default u-text-variant u-text-7" >Ticket Id: {{fticket.id}}</p>
                 </div>
                 <div style="align-self: center;">
-                  <a href="" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1 purchase-btn">Purchase</a>
+                  <form method="POST" action="buyFTicket">
+                    {% csrf_token %}
+                    <button type="submit" name="{{fticket.id}}" value="{{fticket.id}}" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1 purchase-btn">Purchase</button>
+                  </form>
                 </div>
                 </div>
 
@@ -244,7 +256,7 @@
                 <span style="align-self:center;"> VS </span>
                 <div class="opponent-badge-name-b">
                   <img class="u-image u-image-circle u-image-1" src={{bticket.basketball_ticket_image}} alt="" data-image-width="1406" data-image-height="1395">
-                  <p class="u-large-text u-text u-text-default u-text-variant u-text-4">{{bticket.basketball_ticket_opponent}}</p>
+                  <p class="u-large-text u-text u-text-default u-text-variant u-text-4 opponent-name-2">{{bticket.basketball_ticket_opponent}}</p>
                 </div>
                 </div>
 
@@ -254,7 +266,7 @@
                     <p class=""><span style="text-decoration:underline;">Location</span>: {{bticket.basketball_ticket_location}}</p>
                   </div>
                   <div class="opponent-p">
-                    <p class="">({{bticket.basketball_ticket_date}})</p>
+                    <p class=""><span style="text-decoration:underline;">Date</span>: {{bticket.basketball_ticket_date}}</p>
                   </div>
                 </div>
                 </div>
@@ -268,7 +280,10 @@
                   <p class="u-large-text u-text u-text-default u-text-variant u-text-7">Price: {{bticket.basketball_ticket_price}}$</p>
                 </div>
                 <div style="align-self: center;">
-                  <a href="" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1 purchase-btn">Purchase</a>
+                  <form method="POST" action="buyBasketballTicket">
+                    {% csrf_token %}
+                    <button type="submit" name="{{bticket.id}}" value="{{bticket.id}}" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1 purchase-btn">Purchase</button>
+                  </form>
                 </div>
                 </div>
 
@@ -337,6 +352,7 @@
 
 
     <script>
+
       function toggleSport() {
         var basketball_id = document.getElementById('basketball-id');
         var football_id = document.getElementById('football-id');
@@ -362,6 +378,24 @@
           football_header.innerHTML = 'Basketball Tickets';
           footballButton.disabled = false;
           basketballButton.disabled = true;
+        }
+        if (footballButton.disabled == true){
+          footballButton.style.backgroundColor = 'grey';
+          footballButton.style.borderColor = 'grey';
+        }
+        else if (footballButton.disabled == false){
+          footballButton.style.backgroundColor = '#478ac9';
+          footballButton.onmouseover = function(){footballButton.style.backgroundColor = '#007bff';}
+          footballButton.onmouseout = function(){footballButton.style.backgroundColor = '#478ac9';}
+        }
+        if (basketballButton.disabled == true){
+          basketballButton.style.backgroundColor = 'grey';
+          basketballButton.style.borderColor = 'grey';
+        }
+        else if (basketballButton.disabled == false){
+          basketballButton.style.backgroundColor = '#478ac9';
+          basketballButton.onmouseover = function(){basketballButton.style.backgroundColor = '#007bff';}
+          basketballButton.onmouseout = function(){basketballButton.style.backgroundColor = '#478ac9';}
         }
       };
     </script>
