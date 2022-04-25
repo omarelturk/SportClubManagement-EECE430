@@ -13,6 +13,7 @@
       flex-direction: row;
       justify-content: space-between;
       margin-top:3%;
+      margin-bottom:20%;
     }
 
     .opponent-card{
@@ -21,7 +22,7 @@
     }
   </style>
 
-    <section class="u-align-center u-clearfix u-section-1" id="sec-bc9e" style="min-height:100vh;">
+    <section class="u-align-center u-clearfix u-section-1" id="sec-bc9e" style="min-height:1000px;">
       <div class="u-align-left u-clearfix u-sheet u-sheet-1">
         <div class="divs">
           
@@ -38,9 +39,9 @@
                   <div class="u-container-style u-list-item u-repeater-item opponent-card">
                     <div class="u-container-layout u-similar-container u-valign-top u-container-layout-1"><span class="u-file-icon u-icon u-icon-1"><img src={{fticket.football_ticket_image}} alt=""></span>
                       <ul class="u-text u-text-3">
-                        <li>Opponents: {{fticket.football_ticket_opponent}}</li>
-                        <li>Location: {{fticket.football_ticket_location}}</li>
-                        <li>Date: {{fticket.football_ticket_date}}</li>
+                        <li><span style="font-weight:bold;">Opponents:</span> <br>{{fticket.football_ticket_opponent}}</li>
+                        <li><span style="font-weight:bold;">Location:</span> <br>{{fticket.football_ticket_location}}</li>
+                        <li><span style="font-weight:bold;">Date:</span> <br>{{fticket.football_ticket_date}}</li>
                       </ul>
                     </div>
                   </div>
@@ -63,9 +64,9 @@
                 <div class="u-container-style u-list-item u-repeater-item opponent-card">
                   <div class="u-container-layout u-similar-container u-valign-top u-container-layout-1"><span class="u-file-icon u-icon u-icon-1"><img src={{bticket.basketball_ticket_image}} alt=""></span>
                     <ul class="u-text u-text-3">
-                      <li>Opponents: {{bticket.basketball_ticket_opponent}}</li>
-                      <li>Location: {{bticket.basketball_ticket_location}}</li>
-                      <li>Date: {{bticket.basketball_ticket_date}}</li>
+                      <li><span style="font-weight:bold;">Opponents:</span> <br>{{bticket.basketball_ticket_opponent}}</li>
+                      <li><span style="font-weight:bold;">Location:</span> <br>{{bticket.basketball_ticket_location}}</li>
+                      <li><span style="font-weight:bold;">Date:</span> <br>{{bticket.basketball_ticket_date}}</li>
                     </ul>
                   </div>
                 </div>

@@ -24,7 +24,7 @@
       }
 
       .div-ticket-b{
-
+        
       }
 
       .opponent-f{
@@ -98,15 +98,9 @@
       }
 
       #football-id{
-        position:absolute;
-        top:15%;
-        left: 30%;
       }
 
       #basketball-id{
-        position:absolute;
-        top:18%;
-        left:30%;
       }
 
       .opponent-name{
@@ -126,7 +120,7 @@
       
     </style>
 
-    <section class="u-clearfix u-section-1" id="sec-d7cb" style="min-height: 1000px;">
+    <section class="u-clearfix u-section-1" id="sec-d7cb">
 
       {%if messages%}
           {%for message in messages%}
@@ -142,15 +136,26 @@
 
 
       <div class="u-align-left u-clearfix u-sheet u-sheet-1">
-        <button id="footballButton" class="btn btn-primary switch-sport-btn" type="submit" onclick="toggleSport()" style="background-color:grey; border-color:grey;" disabled>Show Football Tickets</button>
-        <button id="basketballButton" class="btn btn-primary switch-sport-btn" type="submit" onclick="toggleSport()">Show Basketball Tickets</button>
+        <div style="display: flex;align-items: center;gap: 1%;">
+          <div>
+            <button id="footballButton" class="btn btn-primary switch-sport-btn" type="submit">Show Football Tickets</button>
+            <button id="basketballButton" class="btn btn-primary switch-sport-btn" type="submit" >Show Basketball Tickets</button>
+          </div>
+          <div>
+            {% if "normaluser" not in request.session %}
+              {% if "staffuser" not in request.session %}
+                <p class="text-muted" style="font-weight:bold;">Please Sign Up to Buy Tickets</p>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
         <!-- Button trigger modal -->
         {% if 'staffuser' in request.session %}
         <button class="btn btn-primary add-ticket" type="submit" data-bs-toggle="modal" data-bs-target=".addFootballTicketClass" id="add-fticket">&plus; Add Football Ticket</button>
         {% endif %}
         <!-- Button trigger modal -->
         {% if 'staffuser' in request.session %}
-        <button class="btn btn-primary add-ticket" type="submit" data-bs-toggle="modal" data-bs-target=".addBasketballTicketClass" id="add-bticket" style="visibility:hidden;">&plus; Add Basketball Ticket</button>
+        <button class="btn btn-primary add-ticket" type="submit" data-bs-toggle="modal" data-bs-target=".addBasketballTicketClass" id="add-bticket">&plus; Add Basketball Ticket</button>
         {% endif %}
 
 
@@ -379,7 +384,7 @@
         {% comment %} <h2 id="basketball-header" class="u-text u-text-default u-text-2" style="visibility:hidden;">Basketball Tickets</h2> {% endcomment %}
 
         <div id="football-id" class="u-list u-list-1">
-          <div class="u-repeater u-repeater-1">
+          <div class="u-repeater u-repeater-1" style="align-self:center;">
 
             {% for fticket in ftickets %}
             <div class="u-border-3 u-border-grey-75 u-container-style u-list-item u-radius-20 u-repeater-item u-shape-round">
@@ -443,8 +448,8 @@
 
           </div>
         </div> 
-        <div id="basketball-id" class="u-list u-list-2" style="visibility:hidden;">
-          <div class="u-repeater u-repeater-2">
+        <div id="basketball-id" class="u-list u-list-2">
+          <div class="u-repeater u-repeater-2" style="align-self:center;">
             
             {% for bticket in btickets %}
             <div class="u-border-3 u-border-grey-75 u-container-style u-list-item u-radius-20 u-repeater-item u-shape-round">
@@ -474,7 +479,7 @@
                 </div>
                 </div>
               </div>
-                
+
                 <div class="u-border-3 u-border-grey-dark-1 u-line u-line-vertical u-line-2"></div>
                 
                 <div class="purchase-b">
@@ -518,102 +523,156 @@
 
     <script>
 
-      function toggleSport() {
-        var basketball_id = document.getElementById('basketball-id');
-        var football_id = document.getElementById('football-id');
+      var basketball_id = document.getElementById('basketball-id');
+      var football_id = document.getElementById('football-id');
 
-        var basketball_header = document.getElementById('basketball-header');
-        var football_header = document.getElementById('football-header');
+      var football_header = document.getElementById('football-header');
 
-        var basketballButton = document.getElementById('basketballButton');
-        var footballButton = document.getElementById('footballButton');
+      var addfticket = document.getElementById('add-fticket');
+      var addbticket = document.getElementById('add-bticket');
 
-        var addfticket = document.getElementById('add-fticket');
-        var addbticket = document.getElementById('add-bticket');
-
-        if (addfticket != null && addbticket != null){
-
-            if (basketball_id.style.visibility !== 'hidden') {
-              basketball_id.style.visibility = 'hidden';
-              addbticket.style.visibility = 'hidden';
-              football_id.style.visibility = 'visible';
-              addfticket.style.visibility = 'visible';
-              football_header.style.visibility = 'visible';
-              football_header.innerHTML = 'Football Tickets';
-              basketballButton.disabled = false;
-              footballButton.disabled = true;
-            }
-            else if (football_id.style.visibility !== 'hidden') {
-              basketball_id.style.visibility = 'visible';
-              addbticket.style.visibility = 'visible';
-              football_id.style.visibility = 'hidden';
-              addfticket.style.visibility = 'hidden';
-              football_header.style.visibility = 'visible';
-              football_header.innerHTML = 'Basketball Tickets';
-              footballButton.disabled = false;
-              basketballButton.disabled = true;
-            }
-
-            if (footballButton.disabled == true){
-              footballButton.style.backgroundColor = 'grey';
-              footballButton.style.borderColor = 'grey';
-            }
-            else if (footballButton.disabled == false){
-              footballButton.style.backgroundColor = '#478ac9';
-              footballButton.onmouseover = function(){footballButton.style.backgroundColor = '#007bff';}
-              footballButton.onmouseout = function(){footballButton.style.backgroundColor = '#478ac9';}
-            }
-
-            if (basketballButton.disabled == true){
-              basketballButton.style.backgroundColor = 'grey';
-              basketballButton.style.borderColor = 'grey';
-            }
-            else if (basketballButton.disabled == false){
-              basketballButton.style.backgroundColor = '#478ac9';
-              basketballButton.onmouseover = function(){basketballButton.style.backgroundColor = '#007bff';}
-              basketballButton.onmouseout = function(){basketballButton.style.backgroundColor = '#478ac9';}
-            }
-        }
-
+      if (addfticket != null && addbticket != null){
+        if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
+          console.info( "This page is reloaded" );
+          if(localStorage.getItem('disabled') == "#footballButton"){
+            showfContent();
+          }
+          else{
+            showbContent();
+          }
+        } 
         else {
-          if (basketball_id.style.visibility !== 'hidden') {
-            basketball_id.style.visibility = 'hidden';
-            football_id.style.visibility = 'visible';
-            football_header.style.visibility = 'visible';
-            football_header.innerHTML = 'Football Tickets';
-            basketballButton.disabled = false;
-            footballButton.disabled = true;
+          console.info( "This page is not reloaded");
+          if(localStorage.getItem('disabled') == "#footballButton"){
+            showfContent();
           }
-          else if (football_id.style.visibility !== 'hidden') {
-            basketball_id.style.visibility = 'visible';
-            football_id.style.visibility = 'hidden';
-            football_header.style.visibility = 'visible';
-            football_header.innerHTML = 'Basketball Tickets';
-            footballButton.disabled = false;
-            basketballButton.disabled = true;
-          }
-
-          if (footballButton.disabled == true){
-            footballButton.style.backgroundColor = 'grey';
-            footballButton.style.borderColor = 'grey';
-          }
-          else if (footballButton.disabled == false){
-            footballButton.style.backgroundColor = '#478ac9';
-            footballButton.onmouseover = function(){footballButton.style.backgroundColor = '#007bff';}
-            footballButton.onmouseout = function(){footballButton.style.backgroundColor = '#478ac9';}
-          }
-
-          if (basketballButton.disabled == true){
-            basketballButton.style.backgroundColor = 'grey';
-            basketballButton.style.borderColor = 'grey';
-          }
-          else if (basketballButton.disabled == false){
-            basketballButton.style.backgroundColor = '#478ac9';
-            basketballButton.onmouseover = function(){basketballButton.style.backgroundColor = '#007bff';}
-            basketballButton.onmouseout = function(){basketballButton.style.backgroundColor = '#478ac9';}
+          else{
+            showbContent();
           }
         }
-      };
+
+        var dButton = localStorage.getItem('disabled');
+        $(dButton).attr("disabled", true);
+
+        $('#basketballButton').click(function () {
+          $("#basketballButton").attr("disabled", true);
+          $("#footballButton").attr("disabled", false);
+          localStorage.setItem('disabled', '#basketballButton'); // store the id in localStorage
+          showbContent();
+          console.log(localStorage.getItem('disabled'));
+        });
+        $('#footballButton').click(function () {
+          $("#footballButton").attr("disabled", true);
+          $("#basketballButton").attr("disabled", false);
+          localStorage.setItem('disabled', '#footballButton'); // store the id in localStorage
+          showfContent();
+          console.log(localStorage.getItem('disabled'));
+        });
+
+        function showfContent(){
+          /*basketball_id.style.visibility = 'hidden';
+          addbticket.style.visibility = 'hidden';
+          football_id.style.visibility = 'visible';
+          addfticket.style.visibility = 'visible';
+          football_header.style.visibility = 'visible';
+          football_header.innerHTML = 'Football Tickets';*/
+          console.log(basketball_id);
+          basketball_id.style.display = 'none';
+          addbticket.style.display = 'none';
+
+          football_id.style.removeProperty('display');
+          addfticket.style.removeProperty('display');
+
+          football_header.innerHTML = 'Football Tickets';
+        }
+
+        function showbContent(){
+          /*basketball_id.style.visibility = 'visible';
+          addbticket.style.visibility = 'visible';
+          football_id.style.visibility = 'hidden';
+          addfticket.style.visibility = 'hidden';
+          football_header.style.visibility = 'visible';
+          football_header.innerHTML = 'Basketball Tickets';*/
+          football_id.style.display = 'none';
+          addfticket.style.display = 'none';
+
+          basketball_id.style.removeProperty('display');
+          addbticket.style.removeProperty('display');
+
+          football_header.innerHTML = 'Basketball Tickets';
+        }
+      }
+
+      // ELSE IF NOT ADD TICKET BUTTONS (NOT STAFF)
+      else{
+        if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
+          console.info( "This page is reloaded" );
+          if(localStorage.getItem('disabled') == "#footballButton"){
+            showfContent();
+          }
+          else{
+            showbContent();
+          }
+        } 
+        else {
+          console.info( "This page is not reloaded");
+          if(localStorage.getItem('disabled') == "#footballButton"){
+            showfContent();
+          }
+          else{
+            showbContent();
+          }
+        }
+
+        var dButton = localStorage.getItem('disabled');
+        $(dButton).attr("disabled", true);
+
+        $('#basketballButton').click(function () {
+          $("#basketballButton").attr("disabled", true);
+          $("#footballButton").attr("disabled", false);
+          localStorage.setItem('disabled', '#basketballButton'); // store the id in localStorage
+          showbContent();
+          console.log(localStorage.getItem('disabled'));
+        });
+        $('#footballButton').click(function () {
+          $("#footballButton").attr("disabled", true);
+          $("#basketballButton").attr("disabled", false);
+          localStorage.setItem('disabled', '#footballButton'); // store the id in localStorage
+          showfContent();
+          console.log(localStorage.getItem('disabled'));
+        });
+
+        function showfContent(){
+          /*basketball_id.style.visibility = 'hidden';
+          addbticket.style.visibility = 'hidden';
+          football_id.style.visibility = 'visible';
+          addfticket.style.visibility = 'visible';
+          football_header.style.visibility = 'visible';
+          football_header.innerHTML = 'Football Tickets';*/
+          console.log(basketball_id);
+          basketball_id.style.display = 'none';
+
+          football_id.style.removeProperty('display');
+
+          football_header.innerHTML = 'Football Tickets';
+        }
+
+        function showbContent(){
+          /*basketball_id.style.visibility = 'visible';
+          addbticket.style.visibility = 'visible';
+          football_id.style.visibility = 'hidden';
+          addfticket.style.visibility = 'hidden';
+          football_header.style.visibility = 'visible';
+          football_header.innerHTML = 'Basketball Tickets';*/
+          football_id.style.display = 'none';
+
+          basketball_id.style.removeProperty('display');
+
+          football_header.innerHTML = 'Basketball Tickets';
+        }
+      }
+
+
 
       // for football ticket update
       function getId(ticketid){
@@ -636,3 +695,118 @@
 
     {% endblock %}
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} NOT USED!!!!
+
+/*function toggleSport() {
+  var basketball_id = document.getElementById('basketball-id');
+  var football_id = document.getElementById('football-id');
+
+  var basketball_header = document.getElementById('basketball-header');
+  var football_header = document.getElementById('football-header');
+
+  var basketballButton = document.getElementById('basketballButton');
+  var footballButton = document.getElementById('footballButton');
+
+  var addfticket = document.getElementById('add-fticket');
+  var addbticket = document.getElementById('add-bticket');
+
+  if (addfticket != null && addbticket != null){
+
+      if (basketball_id.style.visibility !== 'hidden') {
+        basketball_id.style.visibility = 'hidden';
+        addbticket.style.visibility = 'hidden';
+        football_id.style.visibility = 'visible';
+        addfticket.style.visibility = 'visible';
+        football_header.style.visibility = 'visible';
+        football_header.innerHTML = 'Football Tickets';
+        basketballButton.disabled = false;
+        footballButton.disabled = true;
+      }
+      else if (football_id.style.visibility !== 'hidden') {
+        basketball_id.style.visibility = 'visible';
+        addbticket.style.visibility = 'visible';
+        football_id.style.visibility = 'hidden';
+        addfticket.style.visibility = 'hidden';
+        football_header.style.visibility = 'visible';
+        football_header.innerHTML = 'Basketball Tickets';
+        footballButton.disabled = false;
+        basketballButton.disabled = true;
+      }
+
+      if (footballButton.disabled == true){
+        footballButton.style.backgroundColor = 'grey';
+        footballButton.style.borderColor = 'grey';
+      }
+      else if (footballButton.disabled == false){
+        footballButton.style.backgroundColor = '#478ac9';
+        footballButton.onmouseover = function(){footballButton.style.backgroundColor = '#007bff';}
+        footballButton.onmouseout = function(){footballButton.style.backgroundColor = '#478ac9';}
+      }
+
+      if (basketballButton.disabled == true){
+        basketballButton.style.backgroundColor = 'grey';
+        basketballButton.style.borderColor = 'grey';
+      }
+      else if (basketballButton.disabled == false){
+        basketballButton.style.backgroundColor = '#478ac9';
+        basketballButton.onmouseover = function(){basketballButton.style.backgroundColor = '#007bff';}
+        basketballButton.onmouseout = function(){basketballButton.style.backgroundColor = '#478ac9';}
+      }
+  }
+
+  else {
+    if (basketball_id.style.visibility !== 'hidden') {
+      basketball_id.style.visibility = 'hidden';
+      football_id.style.visibility = 'visible';
+      football_header.style.visibility = 'visible';
+      football_header.innerHTML = 'Football Tickets';
+      basketballButton.disabled = false;
+      footballButton.disabled = true;
+    }
+    else if (football_id.style.visibility !== 'hidden') {
+      basketball_id.style.visibility = 'visible';
+      football_id.style.visibility = 'hidden';
+      football_header.style.visibility = 'visible';
+      football_header.innerHTML = 'Basketball Tickets';
+      footballButton.disabled = false;
+      basketballButton.disabled = true;
+    }
+
+    if (footballButton.disabled == true){
+      footballButton.style.backgroundColor = 'grey';
+      footballButton.style.borderColor = 'grey';
+    }
+    else if (footballButton.disabled == false){
+      footballButton.style.backgroundColor = '#478ac9';
+      footballButton.onmouseover = function(){footballButton.style.backgroundColor = '#007bff';}
+      footballButton.onmouseout = function(){footballButton.style.backgroundColor = '#478ac9';}
+    }
+
+    if (basketballButton.disabled == true){
+      basketballButton.style.backgroundColor = 'grey';
+      basketballButton.style.borderColor = 'grey';
+    }
+    else if (basketballButton.disabled == false){
+      basketballButton.style.backgroundColor = '#478ac9';
+      basketballButton.onmouseover = function(){basketballButton.style.backgroundColor = '#007bff';}
+      basketballButton.onmouseout = function(){basketballButton.style.backgroundColor = '#478ac9';}
+    }
+  }
+};*/ {% endcomment %}

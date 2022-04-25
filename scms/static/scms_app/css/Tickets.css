@@ -22,6 +22,7 @@
   grid-template-columns: 100%;
   /* min-height: 793px; */
   grid-auto-columns: 100%;
+  margin-bottom: 20%;
 }
 
 .u-section-1 .u-container-layout-1 {
@@ -264,7 +265,8 @@
 }
 
 .u-section-1 .u-list-2 {
-  /* width: 48%; */
+  /* width: 60%; */
+  margin: 30px auto 0 0;
   /* margin: -411px 0 0 705px; */
 }
 
@@ -273,6 +275,7 @@
   grid-template-columns: 100%;
   /* min-height: 793px; */
   grid-auto-columns: 100%;
+  margin-bottom: 20%;
 }
 
 .u-section-1 .u-container-layout-5 {
