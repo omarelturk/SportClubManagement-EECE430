@@ -20,7 +20,7 @@
     </style>
 
 
-    <section class="u-align-center u-clearfix u-section-1" id="sec-1548">
+    <section class="u-align-center u-clearfix u-section-1" id="sec-1548" style="min-height: 1000px;">
       <div class="u-clearfix u-sheet u-sheet-1">
         <!-- Button trigger modal -->
         {% if 'staffuser' in request.session %}
@@ -93,8 +93,8 @@
                             <label for="playerPosition" class="col-form-label">Player Position</label>
                             <select class="form-control form-select" aria-label="Default select example" name="playerPosition" id="playerPosition" required>
                               <option selected value="Forward">Forward</option>
-                              <option value="Center">Center</option>
-                              <option value="Guard">Guard</option>
+                              <option value="Midfielder">Midfielder</option>
+                              <option value="Defender">Defender</option>
                             </select>
                           </div>
                           <div class="mb-3">
@@ -103,7 +103,7 @@
                           </div>
                           <div class="mb-3">
                             <label for="playerImage" class="form-label">Player Image</label>
-                            <input type="file" class="form-control" name="playerImage" accept="image/*">
+                            <input type="file" class="form-control" name="playerImage" accept="image/*" required>
                           </div>
                         </div>
                         <div class="modal-footer">
@@ -143,8 +143,8 @@
                                 <label for="playerPosition" class="col-form-label">Player Position</label>
                                 <select class="form-control form-select" aria-label="Default select example" name="playerPosition" id="playerPosition" required>
                                   <option selected value="Forward">Forward</option>
-                                  <option value="Center">Center</option>
-                                  <option value="Guard">Guard</option>
+                                  <option value="Midfielder">Midfielder</option>
+                                  <option value="Defender">Defender</option>
                                 </select>
                               </div>
                               <div class="mb-3">

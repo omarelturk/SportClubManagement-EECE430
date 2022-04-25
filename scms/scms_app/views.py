@@ -169,7 +169,6 @@ def password_reset_request(request):
 					try:
 						send_mail(subject, email, 'admin@example.com' , [user.email], fail_silently=False)
 					except BadHeaderError:
-
 						return HttpResponse('Invalid header found.')
 						
 					messages.success(request, 'A message with reset password instructions has been sent to your inbox.')
@@ -179,20 +178,6 @@ def password_reset_request(request):
 	password_reset_form = PasswordResetForm()
 	return render(request=request, template_name="password/password_reset.html", context={"password_reset_form":password_reset_form, "profiles": profiles})
 
-def addBalance(request):
-	if request.method == "POST":
-		session_user_id = request.session.get('_auth_user_id')
-		amount_added = request.POST["amount_added"]
-		context={}
-		profiles = Profile.objects.all()
-		context['profiles'] = profiles
-		for profile in profiles:
-			if int(profile.username_id) == int(session_user_id):
-				old_balance = int(profile.balance)
-				print(old_balance)
-				new_balance = old_balance+int(amount_added)
-				profile.balance = new_balance
-				profile.save()
 
 # BASKETBALL PLAYERS
 
@@ -206,19 +191,33 @@ def addBasketballPlayer(request):
 		
 		playerImage = request.FILES['playerImage']
 		fss = FileSystemStorage()
-		file = fss.save(playerImage.name, playerImage)
-		file_url = fss.url(file)
+		playerImageExist = request.FILES.get('playerImage', False)
 
-		print(file_url)
+		if playerImageExist:
+			playerImage = request.FILES['playerImage']
+			if fss.exists(playerImage.name):
+				file1_url = fss.url(playerImage.name)
+				bplayers = Basketball_Player(
+					player_name=playerName, 
+					player_number=playerNumber, 
+					player_position=playerPosition, 
+					player_nationality=playerNationality, 
+					player_image=file1_url
+				)
+			else:
+				print("INHEREEEEEEE1111")
+				file1 = fss.save(playerImage.name, playerImage)
+				file1_url = fss.url(file1)
+				bplayers = Basketball_Player(
+					player_name=playerName, 
+					player_number=playerNumber, 
+					player_position=playerPosition, 
+					player_nationality=playerNationality, 
+					player_image=file1_url
+				)
 
-		bplayer = Basketball_Player(
-			player_name=playerName, 
-			player_number=playerNumber, 
-			player_position=playerPosition, 
-			player_nationality=playerNationality, 
-			player_image=file_url
-		)
-		bplayer.save()
+		bplayers.save()
+
 	bplayers = Basketball_Player.objects.all()
 	context['players'] = bplayers
 	return redirect("TeamsB.html", context=context)
@@ -239,7 +238,6 @@ def removeBasketballPlayer(request):
 
 def updateBasketballPlayer(request):
 	context={}
-	arr = []
 	if request.method == "POST":
 		
 		playerId = request.POST["updateBtn"]
@@ -252,32 +250,40 @@ def updateBasketballPlayer(request):
 
 		print("BREAK")
 		print(request.FILES['playerImage'])
-		# if request.FILES['playerImage'] != None:
-		# 	playerImage = request.FILES['playerImage']
-		# 	fss = FileSystemStorage()
-		# 	file = fss.save(playerImage.name, playerImage)
-		# 	file_url = fss.url(file)
-
-		# 	bplayerupdate = Basketball_Player(
-		# 		id=playerId, 
-		# 		player_name=playerName, 
-		# 		player_number=playerNumber, 
-		# 		player_position=playerPosition, 
-		# 		player_nationality=playerNationality, 
-		# 		player_image=file_url
-		# 		)
-
-		# 	bplayerupdate.save()
-			
-		# else:
 		bplayerupdate = Basketball_Player.objects.filter(id=playerId)
-		
-		bplayerupdate.update(
-			player_name=playerName, 
-			player_number=playerNumber, 
-			player_position=playerPosition, 
-			player_nationality=playerNationality, 
-		)
+
+		playerImageExist = request.FILES.get('playerImage', False)
+		fss = FileSystemStorage()
+
+		if playerImageExist:
+			playerImage = request.FILES['playerImage']
+			if fss.exists(playerImage.name):
+				file1_url = fss.url(playerImage.name)
+				bplayerupdate.update(
+					player_name=playerName, 
+					player_number=playerNumber, 
+					player_position=playerPosition, 
+					player_nationality=playerNationality, 
+					player_image=file1_url
+				)
+			else:
+				print("INHEREEEEEEE1111")
+				file1 = fss.save(playerImage.name, playerImage)
+				file1_url = fss.url(file1)
+				bplayerupdate.update(
+					player_name=playerName, 
+					player_number=playerNumber, 
+					player_position=playerPosition, 
+					player_nationality=playerNationality, 
+					player_image=file1_url
+				)
+		else:
+			bplayerupdate.update(
+				player_name=playerName, 
+				player_number=playerNumber, 
+				player_position=playerPosition, 
+				player_nationality=playerNationality, 
+			)
 
 	bplayers = Basketball_Player.objects.all()
 	context['players'] = bplayers
@@ -294,20 +300,34 @@ def addFootballPlayer(request):
 		playerNationality = request.POST['playerNationality']
 		
 		playerImage = request.FILES['playerImage']
+		playerImageExist = request.FILES.get('playerImage', False)
+
 		fss = FileSystemStorage()
-		file = fss.save(playerImage.name, playerImage)
-		file_url = fss.url(file)
+		if playerImageExist:
+			playerImage = request.FILES['playerImage']
+			if fss.exists(playerImage.name):
+				file1_url = fss.url(playerImage.name)
+				fplayers = Football_Player(
+					player_name=playerName, 
+					player_number=playerNumber, 
+					player_position=playerPosition, 
+					player_nationality=playerNationality, 
+					player_image=file1_url
+				)
+			else:
+				print("INHEREEEEEEE1111")
+				file1 = fss.save(playerImage.name, playerImage)
+				file1_url = fss.url(file1)
+				fplayers = Football_Player(
+					player_name=playerName, 
+					player_number=playerNumber, 
+					player_position=playerPosition, 
+					player_nationality=playerNationality, 
+					player_image=file1_url
+				)
 
-		print(file_url)
+		fplayers.save()
 
-		fplayer = Football_Player(
-			player_name=playerName, 
-			player_number=playerNumber, 
-			player_position=playerPosition, 
-			player_nationality=playerNationality, 
-			player_image=file_url
-		)
-		fplayer.save()
 	fplayers = Football_Player.objects.all()
 	context['players'] = fplayers
 	return redirect("TeamsF.html", context=context)
@@ -328,7 +348,6 @@ def removeFootballPlayer(request):
 
 def updateFootballPlayer(request):
 	context={}
-	arr = []
 	if request.method == "POST":
 		
 		playerId = request.POST["updateBtn"]
@@ -340,33 +359,41 @@ def updateFootballPlayer(request):
 
 
 		print("BREAK")
-		print(request.FILES['playerImage'])
-		# if request.FILES['playerImage'] != None:
-		# 	playerImage = request.FILES['playerImage']
-		# 	fss = FileSystemStorage()
-		# 	file = fss.save(playerImage.name, playerImage)
-		# 	file_url = fss.url(file)
 
-		# 	bplayerupdate = Basketball_Player(
-		# 		id=playerId, 
-		# 		player_name=playerName, 
-		# 		player_number=playerNumber, 
-		# 		player_position=playerPosition, 
-		# 		player_nationality=playerNationality, 
-		# 		player_image=file_url
-		# 		)
-
-		# 	bplayerupdate.save()
-			
-		# else:
 		fplayerupdate = Football_Player.objects.filter(id=playerId)
-		
-		fplayerupdate.update(
-			player_name=playerName, 
-			player_number=playerNumber, 
-			player_position=playerPosition, 
-			player_nationality=playerNationality, 
-		)
+
+		playerImageExist = request.FILES.get('playerImage', False)
+		fss = FileSystemStorage()
+
+		if playerImageExist:
+			playerImage = request.FILES['playerImage']
+			if fss.exists(playerImage.name):
+				file1_url = fss.url(playerImage.name)
+				fplayerupdate.update(
+					player_name=playerName, 
+					player_number=playerNumber, 
+					player_position=playerPosition, 
+					player_nationality=playerNationality, 
+					player_image=file1_url
+				)
+			else:
+				print("INHEREEEEEEE1111")
+				file1 = fss.save(playerImage.name, playerImage)
+				file1_url = fss.url(file1)
+				fplayerupdate.update(
+					player_name=playerName, 
+					player_number=playerNumber, 
+					player_position=playerPosition, 
+					player_nationality=playerNationality, 
+					player_image=file1_url
+				)
+		else:
+			fplayerupdate.update(
+				player_name=playerName, 
+				player_number=playerNumber, 
+				player_position=playerPosition, 
+				player_nationality=playerNationality, 
+			)
 
 	fplayers = Football_Player.objects.all()
 	context['players'] = fplayers
@@ -387,22 +414,32 @@ def buyBasketballTicket(request):
 		print("HAHAHAHAHAHA")
 		userId = request.session.get('_auth_user_id')
 		print(userId)
-		basketballBought = Basketball_Bought_Ticket(basketball_bought_ticket_id=buyBtn, username_id=userId)
-		basketballBought.save()
-		
+
 		profiles = Profile.objects.all()
+
 		for profile in profiles:
 			if int(profile.username_id) == int(userId):
 				profileBalance = profile.balance
 				print(profileBalance)
 
 		basketballTickets = Basketball_Ticket.objects.all()
+
 		for ticket in basketballTickets:
 			if int(ticket.id) == int(buyBtn):
 				basketballTicketPrice = ticket.basketball_ticket_price
 				print(basketballTicketPrice)
 
-		newBalance = profileBalance - basketballTicketPrice
+		if profileBalance >= basketballTicketPrice:
+			newBalance = profileBalance - basketballTicketPrice
+		else:
+			messages.error(request, 'Insufficient Balance. Please head to your Profile page to add credit into the account.')
+			btickets = Basketball_Ticket.objects.all()
+			context['btickets'] = btickets
+			return redirect("Tickets.html", context=context)
+
+		basketballBought = Basketball_Bought_Ticket(basketball_bought_ticket_id=buyBtn, username_id=userId)
+		basketballBought.save()
+		
 
 		for profile in profiles:
 			if int(profile.username_id) == int(userId):
@@ -420,9 +457,303 @@ def buyBasketballTicket(request):
 	context['btickets'] = btickets
 	return redirect("Tickets.html", context=context)
 
+def addBasketballTicket(request):
+	context={}
+	if request.method == "POST":
+		opponent_name = request.POST['opponentName']
+		match_location = request.POST['matchLocation']
+		ticket_price = request.POST['ticketPrice']
+		available_tickets = request.POST['availableTickets']
+		match_date = request.POST['matchDate']
+
+		opponentImageExist = request.FILES.get('opponentImage', False)
+		fss = FileSystemStorage()
+
+		if opponentImageExist:
+			opponent_image = request.FILES['opponentImage']
+			if fss.exists(opponent_image.name):
+				file1_url = fss.url(opponent_image.name)
+				newbtickets = Basketball_Ticket(
+					basketball_ticket_opponent=opponent_name,
+					basketball_ticket_location=match_location,
+					basketball_ticket_date=match_date,
+					basketball_ticket_price=ticket_price,
+					basketball_ticket_count=available_tickets,
+					basketball_ticket_image=file1_url,
+				)
+				newbtickets.save()
+			else:
+				print("INHEREEEEEEE1111")
+				file1 = fss.save(opponent_image.name, opponent_image)
+				file1_url = fss.url(file1)
+				newbtickets = Basketball_Ticket(
+					basketball_ticket_opponent=opponent_name,
+					basketball_ticket_location=match_location,
+					basketball_ticket_date=match_date,
+					basketball_ticket_price=ticket_price,
+					basketball_ticket_count=available_tickets,
+					basketball_ticket_image=file1_url,
+				)
+				newbtickets.save()
+
+	btickets = Basketball_Ticket.objects.all()
+	context['btickets'] = btickets
+	return redirect("Tickets.html", context=context)
+
+def removeBasketballTicket(request):
+	context={}
+	arr = []
+	if request.method == "POST":
+		for key in request.POST.keys():
+			arr.append(key)
+		removeBtn = arr[1]
+		print(removeBtn)
+		bticketdelete = Basketball_Ticket.objects.get(id=removeBtn)
+		bticketdelete.delete()
+	btickets = Basketball_Ticket.objects.all()
+	context['btickets'] = btickets
+	return redirect("Tickets.html", context=context)
+
+def updateBasketballTicket(request):
+	context={}
+	if request.method == "POST":
+
+		ticketId = request.POST["updateBtn"]		
+		opponent_name = request.POST['opponentName']
+		match_location = request.POST['matchLocation']
+		ticket_price = request.POST['ticketPrice']
+		available_tickets = request.POST['availableTickets']
+		match_date = request.POST['matchDate']
+		
+		print("BREAK")
+
+		bticketupdate = Basketball_Ticket.objects.filter(id=ticketId)
+
+		opponentImageExist = request.FILES.get('opponentImage', False)
+		fss = FileSystemStorage()
+
+		if opponentImageExist:
+			opponentImage = request.FILES['opponentImage']
+			if fss.exists(opponentImage.name):
+				file1_url = fss.url(opponentImage.name)
+				bticketupdate.update(
+					basketball_ticket_opponent=opponent_name,
+					basketball_ticket_location=match_location,
+					basketball_ticket_date=match_date,
+					basketball_ticket_price=ticket_price,
+					basketball_ticket_count=available_tickets,
+					basketball_ticket_image=file1_url,
+				)
+			else:
+				print("INHEREEEEEEE1111")
+				file1 = fss.save(opponentImage.name, opponentImage)
+				file1_url = fss.url(file1)
+				bticketupdate.update(
+					basketball_ticket_opponent=opponent_name,
+					basketball_ticket_location=match_location,
+					basketball_ticket_date=match_date,
+					basketball_ticket_price=ticket_price,
+					basketball_ticket_count=available_tickets,
+					basketball_ticket_image=file1_url,
+				)
+		else:
+			bticketupdate.update(
+				basketball_ticket_opponent=opponent_name,
+					basketball_ticket_location=match_location,
+					basketball_ticket_date=match_date,
+					basketball_ticket_price=ticket_price,
+					basketball_ticket_count=available_tickets,
+			)
+
+	btickets = Basketball_Ticket.objects.all()
+	context['btickets'] = btickets
+	return redirect("Tickets.html", context=context)
+
+
+
+
+# FOOTBALL TICKETS
+
+def buyFootballTicket(request):
+	context={}
+	arr = []
+	if request.method == "POST":
+		for key in request.POST.keys():
+			arr.append(key)
+		buyBtn = arr[1]
+		print("HAHAHAHAHAHA")
+		print(buyBtn)
+		print("HAHAHAHAHAHA")
+		userId = request.session.get('_auth_user_id')
+		print(userId)
+
+		profiles = Profile.objects.all()
+		for profile in profiles:
+			if int(profile.username_id) == int(userId):
+				profileBalance = profile.balance
+				print(profileBalance)
+
+		footballTickets = Football_Ticket.objects.all()
+		for ticket in footballTickets:
+			if int(ticket.id) == int(buyBtn):
+				footballTicketPrice = ticket.football_ticket_price
+				print(footballTicketPrice)
+		if profileBalance >= footballTicketPrice:
+			newBalance = profileBalance - footballTicketPrice
+		else:
+			messages.error(request, 'Insufficient Balance. Please head to your Profile page to add credit into the account.')
+			ftickets = Football_Ticket.objects.all()
+			context['ftickets'] = ftickets
+			return redirect("Tickets.html", context=context)
+
+
+		footballBought = Football_Bought_Ticket(football_bought_ticket_id=buyBtn, username_id=userId)
+		footballBought.save()
+		
+		
+		for profile in profiles:
+			if int(profile.username_id) == int(userId):
+				profile.balance = newBalance
+				profile.save()
+
+		ftickets = Football_Ticket.objects.all()
+		for fticket in ftickets:
+			if int(fticket.id) == int(buyBtn):
+				fticket.football_ticket_count = fticket.football_ticket_count - 1
+				fticket.save()
+		
+
+	ftickets = Football_Ticket.objects.all()
+	context['ftickets'] = ftickets
+	return redirect("Tickets.html", context=context)
+
+def addFootballTicket(request):
+	context={}
+	if request.method == "POST":
+		opponent_name = request.POST['opponentName']
+		match_location = request.POST['matchLocation']
+		home_away = request.POST['homeAway']
+		ticket_price = request.POST['ticketPrice']
+		available_tickets = request.POST['availableTickets']
+		match_date = request.POST['matchDate']
+
+		opponentImageExist = request.FILES.get('opponentImage', False)
+		fss = FileSystemStorage()
+
+		if opponentImageExist:
+			opponent_image = request.FILES['opponentImage']
+			if fss.exists(opponent_image.name):
+				file1_url = fss.url(opponent_image.name)
+				newftickets = Football_Ticket(
+					football_ticket_opponent=opponent_name,
+					football_ticket_homeaway=home_away,
+					football_ticket_location=match_location,
+					football_ticket_date=match_date,
+					football_ticket_price=ticket_price,
+					football_ticket_count=available_tickets,
+					football_ticket_image=file1_url,
+				)
+				newftickets.save()
+			else:
+				print("INHEREEEEEEE1111")
+				file1 = fss.save(opponent_image.name, opponent_image)
+				file1_url = fss.url(file1)
+				newftickets = Football_Ticket(
+					football_ticket_opponent=opponent_name,
+					football_ticket_homeaway=home_away,
+					football_ticket_location=match_location,
+					football_ticket_date=match_date,
+					football_ticket_price=ticket_price,
+					football_ticket_count=available_tickets,
+					football_ticket_image=file1_url,
+				)
+				newftickets.save()
+
+	ftickets = Football_Ticket.objects.all()
+	context['ftickets'] = ftickets
+	return redirect("Tickets.html", context=context)
+
+def removeFootballTicket(request):
+	context={}
+	arr = []
+	if request.method == "POST":
+		for key in request.POST.keys():
+			arr.append(key)
+			print(key)
+		removeBtn = arr[1]
+		print(removeBtn)
+		fticketdelete = Football_Ticket.objects.get(id=removeBtn)
+		fticketdelete.delete()
+	ftickets = Football_Ticket.objects.all()
+	context['ftickets'] = ftickets
+	return redirect("Tickets.html", context=context)
+
+
+def updateFootballTicket(request):
+	context={}
+	arr=[]
+	if request.method == "POST":
+
+		ticketId = request.POST["updateBtn"]		
+		opponent_name = request.POST['opponentName']
+		match_location = request.POST['matchLocation']
+		home_away = request.POST['homeAway']
+		ticket_price = request.POST['ticketPrice']
+		available_tickets = request.POST['availableTickets']
+		match_date = request.POST['matchDate']
+
+		
+
+		print("BREAK")
+
+		fticketupdate = Football_Ticket.objects.filter(id=ticketId)
+
+		opponentImageExist = request.FILES.get('opponentImage', False)
+		fss = FileSystemStorage()
+
+		if opponentImageExist:
+			opponentImage = request.FILES['opponentImage']
+			if fss.exists(opponentImage.name):
+				file1_url = fss.url(opponentImage.name)
+				fticketupdate.update(
+					football_ticket_opponent=opponent_name,
+					football_ticket_homeaway=home_away,
+					football_ticket_location=match_location,
+					football_ticket_date=match_date,
+					football_ticket_price=ticket_price,
+					football_ticket_count=available_tickets,
+					football_ticket_image=file1_url,
+				)
+			else:
+				print("INHEREEEEEEE1111")
+				file1 = fss.save(opponentImage.name, opponentImage)
+				file1_url = fss.url(file1)
+				fticketupdate.update(
+					football_ticket_opponent=opponent_name,
+					football_ticket_homeaway=home_away,
+					football_ticket_location=match_location,
+					football_ticket_date=match_date,
+					football_ticket_price=ticket_price,
+					football_ticket_count=available_tickets,
+					football_ticket_image=file1_url,
+				)
+		else:
+			fticketupdate.update(
+				football_ticket_opponent=opponent_name,
+				football_ticket_homeaway=home_away,
+				football_ticket_location=match_location,
+				football_ticket_date=match_date,
+				football_ticket_price=ticket_price,
+				football_ticket_count=available_tickets,
+			)
+
+	ftickets = Football_Ticket.objects.all()
+	context['ftickets'] = ftickets
+	return redirect("Tickets.html", context=context)
 
 
 # FOR ACCOUNTS AND PROFILE
+
 
 def changeProfileImage(request):
 	context={}
@@ -485,7 +816,6 @@ def changeProfileImage(request):
 					userbackimage=file2_url
 				)
 		else:
-			print("NOT WORKING")
 			profiles = Profile.objects.all()
 			context['profile'] = profiles
 			return redirect("userProfile.html", context=context)
@@ -494,7 +824,30 @@ def changeProfileImage(request):
 	context['profile'] = profiles
 	return redirect("userProfile.html", context=context)
 
+def addBalance(request):
+	if request.method == "POST":
+		session_user_id = request.session.get('_auth_user_id')
+		print("AAAAAAAAAAAAAAA")
+		print(request.POST)
+		amount_addedExist = request.POST.get('amount_added', False)
+		if amount_addedExist:
+			amount_added = request.POST["amount_added"]
+		else:
+			amount_added = 0
+		context={}
+		profiles = Profile.objects.all()
+		context['profiles'] = profiles
+		for profile in profiles:
+			if int(profile.username_id) == int(session_user_id):
+				old_balance = int(profile.balance)
+				print(old_balance)
+				new_balance = old_balance+int(amount_added)
+				profile.balance = new_balance
+				profile.save()
 
+	profiles = Profile.objects.all()
+	context['profile'] = profiles
+	return redirect("userProfile.html", context=context)
 
 def deleteAccount(request):
 	if request.method == "POST":

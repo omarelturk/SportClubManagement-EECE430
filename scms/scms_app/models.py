@@ -97,8 +97,9 @@ class Basketball_Ticket(models.Model):
         verbose_name_plural = "Basketball_Tickets"
 
 class Football_Bought_Ticket(models.Model):
-    username = models.OneToOneField(User, on_delete=models.CASCADE)
-    football_bought_ticket = models.OneToOneField(Football_Ticket, on_delete=models.CASCADE)
+    username = models.ForeignKey(User, on_delete=models.CASCADE)
+    football_bought_ticket = models.ForeignKey(Football_Ticket, on_delete=models.CASCADE)
+
 
     def __str__(self):
         return self.football_bought_ticket
@@ -108,8 +109,8 @@ class Football_Bought_Ticket(models.Model):
         verbose_name_plural = "Football_Bought_Tickets"
 
 class Basketball_Bought_Ticket(models.Model):
-    username = models.OneToOneField(User, on_delete=models.CASCADE)
-    basketball_bought_ticket = models.OneToOneField(Basketball_Ticket, on_delete=models.CASCADE)
+    username = models.ForeignKey(User, on_delete=models.CASCADE)
+    basketball_bought_ticket = models.ForeignKey(Basketball_Ticket, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.basketball_bought_ticket

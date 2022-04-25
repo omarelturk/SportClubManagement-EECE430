@@ -117,13 +117,264 @@
         width: 280px;
         text-align: center;
       }
-
+      
+      .add-ticket{
+        position: absolute;
+        right: 0%;
+        top: 3%;
+      }
+      
     </style>
 
-    <section class="u-clearfix u-section-1" id="sec-d7cb">
+    <section class="u-clearfix u-section-1" id="sec-d7cb" style="min-height: 1000px;">
+
+      {%if messages%}
+          {%for message in messages%}
+            {%if message.level == DEFAULT_MESSAGE_LEVELS.ERROR%}
+              <div class="alert {{message.tags}} alert-dismissible fade show" role="alert" id="message_box">
+                {{message}}
+              </div>
+            {%endif%}
+          {%endfor%}
+        {% endif %}
+
+
+
+
       <div class="u-align-left u-clearfix u-sheet u-sheet-1">
         <button id="footballButton" class="btn btn-primary switch-sport-btn" type="submit" onclick="toggleSport()" style="background-color:grey; border-color:grey;" disabled>Show Football Tickets</button>
         <button id="basketballButton" class="btn btn-primary switch-sport-btn" type="submit" onclick="toggleSport()">Show Basketball Tickets</button>
+        <!-- Button trigger modal -->
+        {% if 'staffuser' in request.session %}
+        <button class="btn btn-primary add-ticket" type="submit" data-bs-toggle="modal" data-bs-target=".addFootballTicketClass" id="add-fticket">&plus; Add Football Ticket</button>
+        {% endif %}
+        <!-- Button trigger modal -->
+        {% if 'staffuser' in request.session %}
+        <button class="btn btn-primary add-ticket" type="submit" data-bs-toggle="modal" data-bs-target=".addBasketballTicketClass" id="add-bticket" style="visibility:hidden;">&plus; Add Basketball Ticket</button>
+        {% endif %}
+
+
+        {% if 'staffuser' in request.session %}
+                <!-- Modal 1 -->
+                <div class="modal fade addFootballTicketClass" id="addFootballTicketModal" tabindex="-1" aria-labelledby="addFootballTicketModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="addFootballTicketModalLabel">Add A New Football Ticket</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form method="POST" action="addFootballTicket" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <div class="mb-3">
+                            <label for="opponentName" class="col-form-label">Opponent Name</label>
+                            <input type="text" class="form-control" name="opponentName" id="opponentName" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="matchLocation" class="col-form-label">Match Location</label>
+                            <input type="text" class="form-control" name="matchLocation" id="matchLocation" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="homeAway" class="col-form-label">Home or Away</label>
+                            <select class="form-control form-select" aria-label="Default select example" name="homeAway" id="homeAway" required>
+                              <option selected value="H">Home</option>
+                              <option value="A">Away</option>
+                            </select>
+                          </div>
+                          <div class="mb-3">
+                            <label for="ticketPrice" class="col-form-label">Ticket Price</label>
+                            <input type="number" class="form-control" name="ticketPrice" id="ticketPrice" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="availableTickets" class="col-form-label">Available Tickets</label>
+                            <input type="number" class="form-control" name="availableTickets" id="availableTickets" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="matchDate" class="col-form-label">Match Date</label>
+                            <input type="datetime-local" class="form-control" name="matchDate" id="matchDate" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="opponentImage" class="form-label">Opponent Image</label>
+                            <input type="file" class="form-control" name="opponentImage" accept="image/*" required>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary" name="addTicket" value="addTicket">Add Ticket</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+                
+                  
+                      <!-- Modal 2 -->
+                    <div class="modal fade addBasketballTicketClass" id="addBasketballModal" tabindex="-1" aria-labelledby="addBasketballModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="addBasketballModal">Add A New Basketball Ticket</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <form method="POST" action="addBasketballTicket" enctype="multipart/form-data">
+                              {% csrf_token %}
+                              <div class="mb-3">
+                                <label for="opponentName" class="col-form-label">Opponent Name</label>
+                                <input type="text" class="form-control" name="opponentName" id="opponentName" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="matchLocation" class="col-form-label">Match Location</label>
+                                <input type="text" class="form-control" name="matchLocation" id="matchLocation" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="ticketPrice" class="col-form-label">Ticket Price</label>
+                                <input type="number" class="form-control" name="ticketPrice" id="ticketPrice" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="availableTickets" class="col-form-label">Available Tickets</label>
+                                <input type="number" class="form-control" name="availableTickets" id="availableTickets" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="matchDate" class="col-form-label">Match Date</label>
+                                <input type="datetime-local" class="form-control" name="matchDate" id="matchDate" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="opponentImage" class="form-label">Opponent Image</label>
+                                <input type="file" class="form-control" name="opponentImage" accept="image/*" required>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-primary" name="addTicket" value="addTicket">Add Ticket</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    
+
+
+                <!-- Modal 3 -->
+                <div class="modal fade updateFootballTicketClass" id="updateFootballTicketModal" tabindex="-1" aria-labelledby="updateFootballTicketModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="updateFootballTicketModalLabel">Update Football Ticket</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form method="POST" action="updateFootballTicket" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <div class="mb-3">
+                            <label for="opponentName" class="col-form-label">Opponent Name</label>
+                            <input type="text" class="form-control" name="opponentName" id="opponentName" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="matchLocation" class="col-form-label">Match Location</label>
+                            <input type="text" class="form-control" name="matchLocation" id="matchLocation" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="homeAway" class="col-form-label">Home or Away</label>
+                            <select class="form-control form-select" aria-label="Default select example" name="homeAway" id="homeAway" required>
+                              <option selected value="H">Home</option>
+                              <option value="A">Away</option>
+                            </select>
+                          </div>
+                          <div class="mb-3">
+                            <label for="ticketPrice" class="col-form-label">Ticket Price</label>
+                            <input type="number" class="form-control" name="ticketPrice" id="ticketPrice" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="availableTickets" class="col-form-label">Available Tickets</label>
+                            <input type="number" class="form-control" name="availableTickets" id="availableTickets" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="matchDate" class="col-form-label">Match Date</label>
+                            <input type="datetime-local" class="form-control" name="matchDate" id="matchDate" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="opponentImage" class="form-label">Opponent Image</label>
+                            <input type="file" class="form-control" name="opponentImage" accept="image/*">
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary" name="updateBtn" value="" id="updateFootballTicketBtn">Update Ticket</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+                
+                  
+                    <!-- Modal 4 -->
+                    <div class="modal fade updateBasketballTicketClass" id="updateBasketballTicketModal" tabindex="-1" aria-labelledby="updateBasketballTicketModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="updateBasketballTicketModal">Update Basketball Ticket</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <form method="POST" action="updateBasketballTicket" enctype="multipart/form-data">
+                              {% csrf_token %}
+                              <div class="mb-3">
+                                <label for="opponentName" class="col-form-label">Opponent Name</label>
+                                <input type="text" class="form-control" name="opponentName" id="opponentName" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="matchLocation" class="col-form-label">Match Location</label>
+                                <input type="text" class="form-control" name="matchLocation" id="matchLocation" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="ticketPrice" class="col-form-label">Ticket Price</label>
+                                <input type="number" class="form-control" name="ticketPrice" id="ticketPrice" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="availableTickets" class="col-form-label">Available Tickets</label>
+                                <input type="number" class="form-control" name="availableTickets" id="availableTickets" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="matchDate" class="col-form-label">Match Date</label>
+                                <input type="datetime-local" class="form-control" name="matchDate" id="matchDate" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="opponentImage" class="form-label">Opponent Image</label>
+                                <input type="file" class="form-control" name="opponentImage" accept="image/*">
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-primary" name="updateBtn" value="" id="updateBasketballTicketBtn">Update Ticket</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+
+                    
+            {% endif %}
+
+
+
+
+
+
+
+
+
         <h2 id="football-header" class="u-text u-text-default u-text-1">Football Tickets</h2>
         {% comment %} <h2 id="basketball-header" class="u-text u-text-default u-text-2" style="visibility:hidden;">Basketball Tickets</h2> {% endcomment %}
 
@@ -133,10 +384,6 @@
             {% for fticket in ftickets %}
             <div class="u-border-3 u-border-grey-75 u-container-style u-list-item u-radius-20 u-repeater-item u-shape-round">
               <div class="u-container-layout u-similar-container u-container-layout-1 div-ticket">
-              
-                {% comment %} <div>
-                  {{ticket.ticket_homeaway}}
-                </div> {% endcomment %}
                 
                 <div class="opponent-badge-f">
                 <img class="u-image u-image-circle u-image-1" src={{fticket.football_ticket_image}} alt="" data-image-width="1406" data-image-height="1395">
@@ -166,74 +413,34 @@
                   <p class="u-large-text u-text u-text-default u-text-variant u-text-7" >Ticket Id: {{fticket.id}}</p>
                 </div>
                 <div style="align-self: center;">
-                  <form method="POST" action="buyFTicket">
+                  <form method="POST" action="buyFootballTicket">
                     {% csrf_token %}
-                    <button type="submit" name="{{fticket.id}}" value="{{fticket.id}}" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1 purchase-btn">Purchase</button>
+                    {% if "normaluser" in request.session %}
+                      {% if fticket.football_ticket_count != 0 %}
+                        <button type="submit" name="{{fticket.id}}" value="{{fticket.id}}" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1 purchase-btn">Purchase</button>
+                      {% else %}
+                        <button type="submit" name="{{fticket.id}}" value="{{fticket.id}}" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1 purchase-btn" disabled>Purchase</button>
+                      {% endif %}
+                    {% else %}
+                      <button type="submit" name="{{fticket.id}}" value="{{fticket.id}}" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1 purchase-btn" disabled>Purchase</button>
+                    {% endif %}
                   </form>
                 </div>
                 </div>
-
+                  {% if 'staffuser' in request.session %}
+                  <div style="display:flex; flex-direction:column; gap:5px; margin-left:5px;">
+                    <form method="POST" action="removeFootballTicket">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-danger" name="{{fticket.id}}" value="{{fticket.id}}"><i class="fa fa-trash"></i></button>
+                    </form>
+                      <button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target=".updateFootballTicketClass" name="{{fticket.id}}" value="{{fticket.id}}" id="{{fticket.id}}" onclick="getId({{fticket.id}})"><i class="fa fa-edit"></i></button>
+                  </div>
+                {% endif %}
               </div>
             </div>
+            
             {% endfor %}
 
-            {% comment %} <div class="u-border-3 u-border-grey-75 u-container-style u-list-item u-radius-20 u-repeater-item u-shape-round">
-              <div class="u-container-layout u-similar-container u-container-layout-1">
-                <div class="u-border-3 u-border-grey-dark-1 u-line u-line-vertical u-line-3"></div>
-                <div class="u-border-3 u-border-grey-dark-1 u-line u-line-vertical u-line-2"></div>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-3">Available: 26</p>
-                <img class="u-image u-image-circle u-image-1" src="{% static 'scms_app/images/fc1.jpg' %}" alt="" data-image-width="1406" data-image-height="1395">
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-4">Football Club 1</p>
-                <h3 class="u-text u-text-default u-text-5">H</h3>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-6">Location</p>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-7">Price: 28$</p>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-8">Date</p>
-                <a href="https://nicepage.com/wordpress-themes" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1">Purchase</a>
-              </div>
-            </div>
-            <div class="u-border-3 u-border-grey-75 u-container-style u-list-item u-radius-20 u-repeater-item u-shape-round">
-              <div class="u-container-layout u-similar-container u-container-layout-2">
-                <div class="u-border-3 u-border-grey-dark-1 u-line u-line-vertical u-line-3"></div>
-                <div class="u-border-3 u-border-grey-dark-1 u-line u-line-vertical u-line-4"></div>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-9"> Available: 26</p>
-                <img class="u-image u-image-circle u-image-2" src="{% static 'scms_app/images/fc2.jpg' %}" alt="" data-image-width="1505" data-image-height="1291">
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-10">Football Club 2</p>
-                <h3 class="u-text u-text-default u-text-11">H</h3>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-12">Location</p>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-13">Price: 28$</p>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-14">Date</p>
-                <a href="https://nicepage.com/wordpress-themes" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-2">Purchase</a>
-              </div>
-            </div>
-            <div class="u-border-3 u-border-grey-75 u-container-style u-list-item u-radius-20 u-repeater-item u-shape-round">
-              <div class="u-container-layout u-similar-container u-container-layout-3">
-                <div class="u-border-3 u-border-grey-dark-1 u-line u-line-vertical u-line-5"></div>
-                <div class="u-border-3 u-border-grey-dark-1 u-line u-line-vertical u-line-6"></div>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-15"> Available: 26</p>
-                <img class="u-image u-image-circle u-image-3" src="{% static 'scms_app/images/fc3.jpg' %}" alt="" data-image-width="1522" data-image-height="1234">
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-16">Football Club 3</p>
-                <h3 class="u-text u-text-default u-text-17">A</h3>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-18">Location</p>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-19">Price: 28$</p>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-20">Date</p>
-                <a href="https://nicepage.com/wordpress-themes" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-3">Purchase</a>
-              </div>
-            </div>
-            <div class="u-border-3 u-border-grey-75 u-container-style u-list-item u-radius-20 u-repeater-item u-shape-round">
-              <div class="u-container-layout u-similar-container u-container-layout-4">
-                <div class="u-border-3 u-border-grey-dark-1 u-line u-line-vertical u-line-7"></div>
-                <div class="u-border-3 u-border-grey-dark-1 u-line u-line-vertical u-line-8"></div>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-21"> Available: 26</p>
-                <img class="u-image u-image-circle u-image-4" src="{% static 'scms_app/images/fc4.jpg' %}" alt="" data-image-width="1452" data-image-height="1356">
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-22">Football Club 4<br>
-                </p>
-                <h3 class="u-text u-text-default u-text-23">A</h3>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-24">Location</p>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-25">Price: 28$</p>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-26">Date</p>
-                <a href="https://nicepage.com/wordpress-themes" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-4">Purchase</a>
-              </div>
-            </div>{% endcomment %}
           </div>
         </div> 
         <div id="basketball-id" class="u-list u-list-2" style="visibility:hidden;">
@@ -242,10 +449,6 @@
             {% for bticket in btickets %}
             <div class="u-border-3 u-border-grey-75 u-container-style u-list-item u-radius-20 u-repeater-item u-shape-round">
               <div class="u-container-layout u-similar-container u-container-layout-1 div-ticket div-ticket-b">
-              
-                {% comment %} <div>
-                  {{ticket.ticket_homeaway}}
-                </div> {% endcomment %}
               
               <div class="opponent-badge-p-b">
                 <div class="opponent-badge-b">
@@ -282,69 +485,31 @@
                 <div style="align-self: center;">
                   <form method="POST" action="buyBasketballTicket">
                     {% csrf_token %}
-                    <button type="submit" name="{{bticket.id}}" value="{{bticket.id}}" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1 purchase-btn">Purchase</button>
+                    {% if "normaluser" in request.session %}
+                      {% if bticket.basketball_ticket_count != 0 %}
+                        <button type="submit" name="{{bticket.id}}" value="{{bticket.id}}" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1 purchase-btn">Purchase</button>
+                      {% else %}
+                        <button type="submit" name="{{bticket.id}}" value="{{bticket.id}}" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1 purchase-btn" disabled>Purchase</button>
+                      {% endif %}
+                    {% else %}
+                      <button type="submit" name="{{bticket.id}}" value="{{bticket.id}}" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1 purchase-btn" disabled>Purchase</button>
+                    {% endif %}
                   </form>
                 </div>
                 </div>
+                {% if 'staffuser' in request.session %}
+                  <div style="display:flex; flex-direction:column; gap:5px; margin-left:5px;">
+                    <form method="POST" action="removeBasketballTicket">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-danger" name="{{bticket.id}}" value="{{bticket.id}}"><i class="fa fa-trash"></i></button>
+                    </form>
+                      <button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target=".updateBasketballTicketClass" name="{{bticket.id}}" value="{{bticket.id}}" id="{{bticket.id}}" onclick="getId2({{bticket.id}})"><i class="fa fa-edit"></i></button>
+                  </div>
+                {% endif %}
 
               </div>
             </div>
             {% endfor %}
-
-
-            {% comment %} <div class="u-border-3 u-border-grey-75 u-container-style u-list-item u-radius-20 u-repeater-item u-shape-round">
-              <div class="u-container-layout u-similar-container u-container-layout-5">
-                <div class="u-border-3 u-border-grey-dark-1 u-line u-line-vertical u-line-9"></div>
-                <img class="u-image u-image-circle u-image-5" src="{% static 'scms_app/images/bt1.jpg' %}" alt="" data-image-width="573" data-image-height="574">
-                <img class="u-image u-image-circle u-preserve-proportions u-image-6" src="{% static 'scms_app/images/aub_phoenix-removebg-preview.png' %}" alt="" data-image-width="300" data-image-height="300">
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-27">Location</p>
-                <h4 class="u-text u-text-default u-text-28">VS</h4>
-                <p class="u-text u-text-default u-text-29">Date</p>
-                <a href="https://nicepage.com/k/auto-mechanic-html-templates" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-5">Purchase</a>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-30">Available: 26</p>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-31">Price: 40$</p>
-              </div>
-            </div>
-            <div class="u-border-3 u-border-grey-75 u-container-style u-list-item u-radius-20 u-repeater-item u-shape-round">
-              <div class="u-container-layout u-similar-container u-container-layout-6">
-                <div class="u-border-3 u-border-grey-dark-1 u-line u-line-vertical u-line-10"></div>
-                <img class="u-image u-image-circle u-image-7" src="{% static 'scms_app/images/bt2.jpg' %}" alt="" data-image-width="597" data-image-height="605">
-                <img class="u-image u-image-circle u-preserve-proportions u-image-8" src="{% static 'scms_app/images/aub_phoenix-removebg-preview.png' %}" alt="" data-image-width="300" data-image-height="300">
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-32">Location</p>
-                <h4 class="u-text u-text-default u-text-33">VS</h4>
-                <p class="u-text u-text-default u-text-34">Date</p>
-                <a href="https://nicepage.com/k/auto-mechanic-html-templates" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-6">Purchase</a>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-35">Available: 26</p>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-36">Price: 40$</p>
-              </div>
-            </div>
-            <div class="u-border-3 u-border-grey-75 u-container-style u-list-item u-radius-20 u-repeater-item u-shape-round">
-              <div class="u-container-layout u-similar-container u-container-layout-7">
-                <div class="u-border-3 u-border-grey-dark-1 u-line u-line-vertical u-line-11"></div>
-                <img class="u-image u-image-circle u-image-9" src="{% static 'scms_app/images/bt3.jpg' %}" alt="" data-image-width="641" data-image-height="595">
-                <img class="u-image u-image-circle u-preserve-proportions u-image-10" src="{% static 'scms_app/images/aub_phoenix-removebg-preview.png' %}" alt="" data-image-width="300" data-image-height="300">
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-37">Location</p>
-                <h4 class="u-text u-text-default u-text-38">VS</h4>
-                <p class="u-text u-text-default u-text-39">Date</p>
-                <a href="https://nicepage.com/k/auto-mechanic-html-templates" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-7">Purchase</a>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-40">Available: 26</p>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-41">Price: 40$</p>
-              </div>
-            </div>
-            <div class="u-border-3 u-border-grey-75 u-container-style u-list-item u-radius-20 u-repeater-item u-shape-round">
-              <div class="u-container-layout u-similar-container u-container-layout-8">
-                <div class="u-border-3 u-border-grey-dark-1 u-line u-line-vertical u-line-12"></div>
-                <img class="u-image u-image-circle u-image-11" src="{% static 'scms_app/images/bt4.jpg' %}" alt="" data-image-width="556" data-image-height="561">
-                <img class="u-image u-image-circle u-preserve-proportions u-image-12" src="{% static 'scms_app/images/aub_phoenix-removebg-preview.png' %}" alt="" data-image-width="300" data-image-height="300">
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-42">Location</p>
-                <h4 class="u-text u-text-default u-text-43">VS</h4>
-                <p class="u-text u-text-default u-text-44">Date</p>
-                <a href="https://nicepage.com/k/auto-mechanic-html-templates" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-8">Purchase</a>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-45">Available: 26</p>
-                <p class="u-large-text u-text u-text-default u-text-variant u-text-46">Price: 40$</p>
-              </div>
-            </div>
-          </div> {% endcomment %}
         </div>
       </div>
     </section>
@@ -363,41 +528,108 @@
         var basketballButton = document.getElementById('basketballButton');
         var footballButton = document.getElementById('footballButton');
 
-        if (basketball_id.style.visibility !== 'hidden') {
-          basketball_id.style.visibility = 'hidden';
-          football_id.style.visibility = 'visible';
-          football_header.style.visibility = 'visible';
-          football_header.innerHTML = 'Football Tickets';
-          basketballButton.disabled = false;
-          footballButton.disabled = true;
+        var addfticket = document.getElementById('add-fticket');
+        var addbticket = document.getElementById('add-bticket');
+
+        if (addfticket != null && addbticket != null){
+
+            if (basketball_id.style.visibility !== 'hidden') {
+              basketball_id.style.visibility = 'hidden';
+              addbticket.style.visibility = 'hidden';
+              football_id.style.visibility = 'visible';
+              addfticket.style.visibility = 'visible';
+              football_header.style.visibility = 'visible';
+              football_header.innerHTML = 'Football Tickets';
+              basketballButton.disabled = false;
+              footballButton.disabled = true;
+            }
+            else if (football_id.style.visibility !== 'hidden') {
+              basketball_id.style.visibility = 'visible';
+              addbticket.style.visibility = 'visible';
+              football_id.style.visibility = 'hidden';
+              addfticket.style.visibility = 'hidden';
+              football_header.style.visibility = 'visible';
+              football_header.innerHTML = 'Basketball Tickets';
+              footballButton.disabled = false;
+              basketballButton.disabled = true;
+            }
+
+            if (footballButton.disabled == true){
+              footballButton.style.backgroundColor = 'grey';
+              footballButton.style.borderColor = 'grey';
+            }
+            else if (footballButton.disabled == false){
+              footballButton.style.backgroundColor = '#478ac9';
+              footballButton.onmouseover = function(){footballButton.style.backgroundColor = '#007bff';}
+              footballButton.onmouseout = function(){footballButton.style.backgroundColor = '#478ac9';}
+            }
+
+            if (basketballButton.disabled == true){
+              basketballButton.style.backgroundColor = 'grey';
+              basketballButton.style.borderColor = 'grey';
+            }
+            else if (basketballButton.disabled == false){
+              basketballButton.style.backgroundColor = '#478ac9';
+              basketballButton.onmouseover = function(){basketballButton.style.backgroundColor = '#007bff';}
+              basketballButton.onmouseout = function(){basketballButton.style.backgroundColor = '#478ac9';}
+            }
         }
-        else if (football_id.style.visibility !== 'hidden') {
-          basketball_id.style.visibility = 'visible';
-          football_id.style.visibility = 'hidden';
-          football_header.style.visibility = 'visible';
-          football_header.innerHTML = 'Basketball Tickets';
-          footballButton.disabled = false;
-          basketballButton.disabled = true;
-        }
-        if (footballButton.disabled == true){
-          footballButton.style.backgroundColor = 'grey';
-          footballButton.style.borderColor = 'grey';
-        }
-        else if (footballButton.disabled == false){
-          footballButton.style.backgroundColor = '#478ac9';
-          footballButton.onmouseover = function(){footballButton.style.backgroundColor = '#007bff';}
-          footballButton.onmouseout = function(){footballButton.style.backgroundColor = '#478ac9';}
-        }
-        if (basketballButton.disabled == true){
-          basketballButton.style.backgroundColor = 'grey';
-          basketballButton.style.borderColor = 'grey';
-        }
-        else if (basketballButton.disabled == false){
-          basketballButton.style.backgroundColor = '#478ac9';
-          basketballButton.onmouseover = function(){basketballButton.style.backgroundColor = '#007bff';}
-          basketballButton.onmouseout = function(){basketballButton.style.backgroundColor = '#478ac9';}
+
+        else {
+          if (basketball_id.style.visibility !== 'hidden') {
+            basketball_id.style.visibility = 'hidden';
+            football_id.style.visibility = 'visible';
+            football_header.style.visibility = 'visible';
+            football_header.innerHTML = 'Football Tickets';
+            basketballButton.disabled = false;
+            footballButton.disabled = true;
+          }
+          else if (football_id.style.visibility !== 'hidden') {
+            basketball_id.style.visibility = 'visible';
+            football_id.style.visibility = 'hidden';
+            football_header.style.visibility = 'visible';
+            football_header.innerHTML = 'Basketball Tickets';
+            footballButton.disabled = false;
+            basketballButton.disabled = true;
+          }
+
+          if (footballButton.disabled == true){
+            footballButton.style.backgroundColor = 'grey';
+            footballButton.style.borderColor = 'grey';
+          }
+          else if (footballButton.disabled == false){
+            footballButton.style.backgroundColor = '#478ac9';
+            footballButton.onmouseover = function(){footballButton.style.backgroundColor = '#007bff';}
+            footballButton.onmouseout = function(){footballButton.style.backgroundColor = '#478ac9';}
+          }
+
+          if (basketballButton.disabled == true){
+            basketballButton.style.backgroundColor = 'grey';
+            basketballButton.style.borderColor = 'grey';
+          }
+          else if (basketballButton.disabled == false){
+            basketballButton.style.backgroundColor = '#478ac9';
+            basketballButton.onmouseover = function(){basketballButton.style.backgroundColor = '#007bff';}
+            basketballButton.onmouseout = function(){basketballButton.style.backgroundColor = '#478ac9';}
+          }
         }
       };
+
+      // for football ticket update
+      function getId(ticketid){
+        openUpdateModal = document.getElementById(ticketid);
+        updateFootballTicketBtn = document.getElementById("updateFootballTicketBtn");
+        console.log(openUpdateModal.value)
+        updateFootballTicketBtn.value = openUpdateModal.value;
+      }
+
+      // for basketball ticket update
+      function getId2(ticketid){
+        openUpdateModal = document.getElementById(ticketid);
+        updateBasketballTicketBtn = document.getElementById("updateBasketballTicketBtn");
+        console.log(openUpdateModal.value)
+        updateBasketballTicketBtn.value = openUpdateModal.value;
+      }
     </script>
 
 
