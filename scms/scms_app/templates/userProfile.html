@@ -197,7 +197,7 @@
           <div class="u-container-layout u-container-layout-1 big-box">
             {% for profile in profiles %}
               {% if profile.username_id == user.id %}
-                <img class="u-expanded-width u-image u-image-round u-top-left-radius-45 u-top-right-radius-45 u-image-1" style="cursor: pointer;" name="backimg" src={{profile.userbackimage}} alt="" data-image-width="1200" data-image-height="965" data-bs-toggle="modal" data-bs-target=".changeProfilePicClass">
+                <img title="Click to Change Background Picture" class="u-expanded-width u-image u-image-round u-top-left-radius-45 u-top-right-radius-45 u-image-1" style="cursor: pointer;" name="backimg" src={{profile.userbackimage}} alt="" data-image-width="1200" data-image-height="965" data-bs-toggle="modal" data-bs-target=".changeProfilePicClass">
                 {% endif %}
             {% endfor %}
 

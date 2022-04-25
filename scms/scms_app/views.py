@@ -2,6 +2,7 @@
 from multiprocessing import context
 from os import stat
 from django.shortcuts import render, redirect
+from django.urls import resolve
 from django.http import HttpResponse
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -429,7 +430,9 @@ def buyBasketballTicket(request):
 		for profile in profiles:
 			if int(profile.username_id) == int(userId):
 				profileBalance = profile.balance
+				profileUsername = profile.user_name
 				print(profileBalance)
+				print(profileUsername)
 
 		basketballTickets = Basketball_Ticket.objects.all()
 
@@ -446,7 +449,7 @@ def buyBasketballTicket(request):
 			context['btickets'] = btickets
 			return redirect("Tickets.html", context=context)
 
-		basketballBought = Basketball_Bought_Ticket(basketball_bought_ticket_id=buyBtn, username_id=userId)
+		basketballBought = Basketball_Bought_Ticket(basketball_bought_ticket_id=buyBtn, username_id=userId, user_name=profileUsername)
 		basketballBought.save()
 		
 
@@ -601,7 +604,9 @@ def buyFootballTicket(request):
 		for profile in profiles:
 			if int(profile.username_id) == int(userId):
 				profileBalance = profile.balance
+				profileUsername = profile.user_name
 				print(profileBalance)
+				print(profileUsername)
 
 		footballTickets = Football_Ticket.objects.all()
 		for ticket in footballTickets:
@@ -616,9 +621,8 @@ def buyFootballTicket(request):
 			context['ftickets'] = ftickets
 			return redirect("Tickets.html", context=context)
 
-		buyerUsername = User.objects.get(id=userId)
 
-		footballBought = Football_Bought_Ticket(football_bought_ticket_id=buyBtn, username_id=userId, user_name=buyerUsername.username)
+		footballBought = Football_Bought_Ticket(football_bought_ticket_id=buyBtn, username_id=userId, user_name=profileUsername)
 		footballBought.save()
 		
 		
@@ -911,7 +915,6 @@ def addBalance(request):
 				balance=new_balance,
 			)
 				
-
 	profiles = Profile.objects.all()
 	context['profile'] = profiles
 	return redirect("userProfile.html", context=context)

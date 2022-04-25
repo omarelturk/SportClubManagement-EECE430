@@ -29,6 +29,8 @@ class NewUserForm(UserCreationForm):
         return user
 
 
+
+
 # from dataclasses import fields
 # from django.forms import ModelForm, TextInput, EmailInput, PasswordInput
 # from django.contrib.auth.forms import UserCreationForm

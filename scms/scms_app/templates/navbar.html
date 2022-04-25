@@ -55,8 +55,8 @@
         display:flex; 
         flex-direction:column-reverse; 
         justify-content: center; 
-        align-items: center;
-        margin-left:10%;
+        align-items: flex-start;
+        margin-left:5%;
       }
 
       .username-overflow-normal{
@@ -105,6 +105,36 @@
     <meta property="og:title" content="Home" />
     <meta property="og:type" content="website" />
 </head>
+
+<!-- Modal 1 -->
+<div class="modal fade changeProfilePicClass" id="changeProfilePic" tabindex="-1" aria-labelledby="changeProfilePicLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="changeProfilePicLabel">Change Profile Picture</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="changeProfileImage" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="profileImage" class="form-label">Your Image</label>
+              <input type="file" class="form-control" name="profileImage" accept="image/*">
+            </div>
+            <div class="mb-3">
+              <label for="profileBackgroundImage" class="form-label">Your Background Image</label>
+              <input type="file" class="form-control" name="profileBackgroundImage" accept="image/*" disabled>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" name="changeImg" value="changeImg">Apply Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <header
       class="u-clearfix u-custom-color-3 u-header u-sticky u-sticky-9038 u-header"
       id="sec-2308"
@@ -319,32 +349,47 @@
           </div>
         </nav>
       {% comment %} </div> {% endcomment %}
+
+
+
       {% if user.is_authenticated %}
         {% if 'normaluser' in request.session %}
             {% for profile in profiles %}
               {% if profile.username_id == user.id %}
-                <div class="profile-div">
-                  <div class="dropdown">
-                    <div class="username-overflow-normal">
-                      <span class="span-login drop-btn">Welcome,&nbsp<span class="span-un" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target=".updateUsernameClass">{{user.username}}</span>
+                <div style="display:flex; flex-direction:row; margin-left:5%;">
+                    <div style="align-self:center;">
+                      <img title="Click to Change Profile Picture" src={{profile.userimage}} class="u-image u-logo u-image-1" style="border-radius:50px; width:60px; height:60px; cursor:pointer;" data-bs-toggle="modal" data-bs-target=".changeProfilePicClass">
                     </div>
-                    <div class="dropdown-content">
-                      <a href="userProfile.html">My Profile</a>
-                      <a href="/logout">Sign Out</a>
+                    <div class="profile-div">
+                      <div class="dropdown">
+                        <div class="username-overflow-normal">
+                          <span class="span-login drop-btn">Welcome,&nbsp<span class="span-un" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target=".updateUsernameClass">{{user.username}}</span>
+                        </div>
+                        <div class="dropdown-content">
+                          <a href="userProfile.html">My Profile</a>
+                          <a href="/logout">Sign Out</a>
+                        </div>
+                      </div>
+                      <div>
+                        {% comment %} <span><a class="nav-a" href="/logout">
+                        <button class="button button2">Logout</button></a>
+                        </span> {% endcomment %}
+                        <span>BAL: {{profile.balance}} $</span>
+                      </div>
                     </div>
-                  </div>
-                  <div>
-                    {% comment %} <span><a class="nav-a" href="/logout">
-                    <button class="button button2">Logout</button></a>
-                    </span> {% endcomment %}
-                    <span>BAL: {{profile.balance}} $</span>
-                  </div>
                   </div> 
                 </div>
               {% endif %}
             {% endfor %}
         {% elif 'staffuser' in request.session %}
                   <div class="profile-div">
+                    {% for profile in profiles %}
+                      {% if profile.username_id == user.id %}
+                        <div>
+                          <img src={{profile.userimage}} class="u-image u-logo u-image-1">
+                        </div>
+                      {% endif %}
+                    {% endfor %}
                     <div class="dropdown">
                         <div style="display:flex;">
                           <div>
