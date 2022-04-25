@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+# from platformdirs import user_documents_dir
 from requests import request, session
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
@@ -41,6 +42,7 @@ elif platform == "win32":
 
 def register_request(request):
 	if request.method == "POST":
+		file_url = None
 		form = NewUserForm(request.POST, request.FILES)
 		user_select = request.POST["users_type"]
 		if user_select == "normaluser":
@@ -49,25 +51,32 @@ def register_request(request):
 				formaddress = form.cleaned_data.get('address')
 				form.save()
 
+				print(formusername)
+
 				print("LOOOK HHEREEEEEE")
 				print(request.FILES)
+				print("AFTERRRRR")
 
+				fss = FileSystemStorage()
 				userImageExist = request.FILES.get('userImage', False)
-				if userImageExist is True:
-					userImage = request.FILES['userImage']
-					fss = FileSystemStorage()
-					file = fss.save(userImage.name, userImage)
-					file_url = fss.url(file)
-				else:
-					file_url = None
 
-				user = User.objects.get(username=formusername)
+				if userImageExist:
+					userImage = request.FILES['userImage']
+					if fss.exists(userImage.name):
+						print(userImage)
+						file_url = fss.url(userImage.name)
+					else:
+						print(userImage)
+						file = fss.save(userImage.name, userImage)
+						file_url = fss.url(file)
+
+				user = User.objects.get(username=formusername.lower())
 
 				if file_url is None:
-					profile = Profile(username_id=user.id, address=formaddress, balance=0)
+					profile = Profile(username_id=user.id, user_name=user.username, address=formaddress, balance=0)
 					profile.save()
 				else:
-					profile = Profile(username_id=user.id, userimage=file_url, address=formaddress, balance=0)
+					profile = Profile(username_id=user.id, user_name=user.username, userimage=file_url, address=formaddress, balance=0)
 					profile.save()
 
 				messages.success(request, "Registration successful.")
@@ -577,6 +586,7 @@ def updateBasketballTicket(request):
 def buyFootballTicket(request):
 	context={}
 	arr = []
+	
 	if request.method == "POST":
 		for key in request.POST.keys():
 			arr.append(key)
@@ -606,8 +616,9 @@ def buyFootballTicket(request):
 			context['ftickets'] = ftickets
 			return redirect("Tickets.html", context=context)
 
+		buyerUsername = User.objects.get(id=userId)
 
-		footballBought = Football_Bought_Ticket(football_bought_ticket_id=buyBtn, username_id=userId)
+		footballBought = Football_Bought_Ticket(football_bought_ticket_id=buyBtn, username_id=userId, user_name=buyerUsername.username)
 		footballBought.save()
 		
 		
@@ -824,26 +835,82 @@ def changeProfileImage(request):
 	context['profile'] = profiles
 	return redirect("userProfile.html", context=context)
 
+def updateProfileInfo(request):
+	context={}
+	if request.method == "POST":
+		profileFName = request.POST['profileFName']
+		profileLName = request.POST['profileLName']
+		profileEmail = request.POST['profileEmail']
+		profileAddress = request.POST['profileAddress']
+
+		userId = request.session.get('_auth_user_id')
+		userupdate = User.objects.filter(id=userId)
+		profileupdate = Profile.objects.filter(username_id=userId)
+
+		userupdate.update(
+			first_name = profileFName,
+			last_name = profileLName,
+			email = profileEmail,
+		)
+
+		profileupdate.update(
+			address = profileAddress,
+		)
+	
+	profiles = Profile.objects.all()
+	context['profile'] = profiles
+	return redirect("userProfile.html", context=context)
+
+def updateUsername(request):
+	context={}
+	if request.method == "POST":
+
+		newuserName = request.POST['newUsername']
+
+		userId = request.session.get('_auth_user_id')
+		userupdate = User.objects.filter(id=userId)
+		users = User.objects.all()
+
+		userExist = False
+		
+		print("request name")
+		print(newuserName)
+		print("database name")
+		print(userupdate[0])
+		for existingUser in users:
+			if (str(newuserName)).lower() == (str(existingUser)).lower():
+				userExist = True
+
+		if userExist is False:
+			print('trying to update')
+			userupdate.update(
+				username = str(newuserName).lower(),
+			)
+		else:
+			messages.error(request, "Username already exists!")
+	
+	profiles = Profile.objects.all()
+	context['profile'] = profiles
+	return redirect("userProfile.html", context=context)
+
+
 def addBalance(request):
+	context={}
 	if request.method == "POST":
 		session_user_id = request.session.get('_auth_user_id')
 		print("AAAAAAAAAAAAAAA")
-		print(request.POST)
-		amount_addedExist = request.POST.get('amount_added', False)
-		if amount_addedExist:
-			amount_added = request.POST["amount_added"]
-		else:
-			amount_added = 0
-		context={}
-		profiles = Profile.objects.all()
-		context['profiles'] = profiles
-		for profile in profiles:
-			if int(profile.username_id) == int(session_user_id):
-				old_balance = int(profile.balance)
-				print(old_balance)
-				new_balance = old_balance+int(amount_added)
-				profile.balance = new_balance
-				profile.save()
+		amount_added = request.POST["amount_added"]
+		
+		profilebalanceupdate = Profile.objects.filter(username_id=session_user_id)
+
+		for profile in profilebalanceupdate:
+			old_balance = int(profile.balance)
+			print(old_balance)
+			new_balance = old_balance+int(amount_added)
+			profilebalanceupdate.update(
+				balance=new_balance,
+			)
+				
 
 	profiles = Profile.objects.all()
 	context['profile'] = profiles

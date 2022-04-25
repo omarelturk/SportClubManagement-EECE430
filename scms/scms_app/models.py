@@ -25,6 +25,7 @@ HOMEAWAY = [
 # Create your models here.
 class Profile(models.Model):
     username = models.OneToOneField(User, on_delete=models.CASCADE)
+    user_name = models.CharField(max_length=100)
     balance = models.IntegerField(default=0)
     address = models.CharField(max_length=100, default="")
     userimage = models.ImageField(storage=OverwriteStorage(), default="scms_app/media/default-user.jpg")
@@ -99,6 +100,7 @@ class Basketball_Ticket(models.Model):
 class Football_Bought_Ticket(models.Model):
     username = models.ForeignKey(User, on_delete=models.CASCADE)
     football_bought_ticket = models.ForeignKey(Football_Ticket, on_delete=models.CASCADE)
+    user_name = models.CharField(max_length=100)
 
 
     def __str__(self):
@@ -111,6 +113,7 @@ class Football_Bought_Ticket(models.Model):
 class Basketball_Bought_Ticket(models.Model):
     username = models.ForeignKey(User, on_delete=models.CASCADE)
     basketball_bought_ticket = models.ForeignKey(Basketball_Ticket, on_delete=models.CASCADE)
+    user_name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.basketball_bought_ticket
