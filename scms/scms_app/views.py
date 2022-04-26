@@ -21,7 +21,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 import netifaces as ni
-from scms_app.models import Football_Player, Basketball_Player, Football_Ticket, Basketball_Ticket, Profile
+from scms_app.models import Football_Player, Basketball_Player, Football_Ticket, Basketball_Ticket, Profile, Merchandise
 from sys import platform
 from django.core.files.storage import FileSystemStorage
 
@@ -451,7 +451,6 @@ def buyBasketballTicket(request):
 
 		basketballBought = Basketball_Bought_Ticket(basketball_bought_ticket_id=buyBtn, username_id=userId, user_name=profileUsername)
 		basketballBought.save()
-		
 
 		for profile in profiles:
 			if int(profile.username_id) == int(userId):
@@ -621,11 +620,10 @@ def buyFootballTicket(request):
 			context['ftickets'] = ftickets
 			return redirect("Tickets.html", context=context)
 
-
 		footballBought = Football_Bought_Ticket(football_bought_ticket_id=buyBtn, username_id=userId, user_name=profileUsername)
 		footballBought.save()
 		
-		
+
 		for profile in profiles:
 			if int(profile.username_id) == int(userId):
 				profile.balance = newBalance
@@ -765,6 +763,184 @@ def updateFootballTicket(request):
 	ftickets = Football_Ticket.objects.all()
 	context['ftickets'] = ftickets
 	return redirect("Tickets.html", context=context)
+
+
+# FOR SHOP
+
+def addMerchandise(request):
+	context={}
+	if request.method == "POST":
+		merchName = request.POST['merchName']
+		merchQuantity = request.POST['merchQuantity']
+		merchPrice = request.POST['merchPrice']
+		merchType = request.POST['merchType']
+
+		merchImageExist = request.FILES.get('merchImage', False)
+		fss = FileSystemStorage()
+
+		if merchImageExist:
+			merchImage = request.FILES['merchImage']
+			if fss.exists(merchImage.name):
+				file1_url = fss.url(merchImage.name)
+				newmerch = Merchandise(
+					merch_name=merchName,
+					merch_quantity=merchQuantity,
+					merch_price=merchPrice,
+					merch_type=merchType,
+					merch_image=file1_url,
+				)
+				newmerch.save()
+			else:
+				print("INHEREEEEEEE1111")
+				file1 = fss.save(merchImage.name, merchImage)
+				file1_url = fss.url(file1)
+				newmerch = Merchandise(
+					merch_name=merchName,
+					merch_quantity=merchQuantity,
+					merch_price=merchPrice,
+					merch_type=merchType,
+					merch_image=file1_url,
+				)
+				newmerch.save()
+
+	merchandise = Merchandise.objects.all()
+	print(merchandise)
+	context['merchandise'] = merchandise
+	return redirect("Shop.html", context=context)
+
+
+def removeMerchandise(request):
+	context={}
+	arr = []
+	if request.method == "POST":
+		for key in request.POST.keys():
+			arr.append(key)
+			print(key)
+		removeBtn = arr[1]
+		print(removeBtn)
+		mechdelete = Merchandise.objects.get(id=removeBtn)
+		mechdelete.delete()
+	mechandise = Merchandise.objects.all()
+	context['mechandise'] = mechandise
+	return redirect("Shop.html", context=context)
+
+def updateMerchandise(request):
+	context={}
+	if request.method == "POST":
+		
+		print(request.POST)
+
+		merchId = request.POST['updateBtn']
+		merchName = request.POST['merchName']
+		merchQuantity = request.POST['merchQuantity']
+		merchPrice = request.POST['merchPrice']
+		merchType = request.POST['merchType']
+
+		
+
+		print("BREAK")
+
+		merchupdate = Merchandise.objects.filter(id=merchId)
+
+		merchImageExist = request.FILES.get('merchImage', False)
+		fss = FileSystemStorage()
+
+		if merchImageExist:
+			merchImage = request.FILES['merchImage']
+			if fss.exists(merchImage.name):
+				file1_url = fss.url(merchImage.name)
+				merchupdate.update(
+					merch_name=merchName,
+					merch_quantity=merchQuantity,
+					merch_price=merchPrice,
+					merch_type=merchType,
+					merch_image=file1_url,
+				)
+			else:
+				print("INHEREEEEEEE1111")
+				file1 = fss.save(merchImage.name, merchImage)
+				file1_url = fss.url(file1)
+				merchupdate.update(
+					merch_name=merchName,
+					merch_quantity=merchQuantity,
+					merch_price=merchPrice,
+					merch_type=merchType,
+					merch_image=file1_url,
+				)
+		else:
+			merchupdate.update(
+				merch_name=merchName,
+				merch_quantity=merchQuantity,
+				merch_price=merchPrice,
+				merch_type=merchType,
+			)
+
+	merchandise = Merchandise.objects.all()
+	context['merchandise'] = merchandise
+	return redirect("Shop.html", context=context)
+
+
+def buyMerchandise(request):
+	context={}
+	arr = []
+	if request.method == "POST":
+		for key in request.POST.keys():
+			arr.append(key)
+		buyBtn = arr[1]
+		print("HAHAHAHAHAHA")
+		print(buyBtn)
+		print("HAHAHAHAHAHA")
+		userId = request.session.get('_auth_user_id')
+		print(userId)
+
+		profiles = Profile.objects.all()
+
+		for profile in profiles:
+			if int(profile.username_id) == int(userId):
+				profileBalance = profile.balance
+				profileUsername = profile.user_name
+				print(profileBalance)
+				print(profileUsername)
+
+		merchandise = Merchandise.objects.all()
+
+		for merch in merchandise:
+			if int(merch.id) == int(buyBtn):
+				merchPrice = merch.merch_price
+				merchName = merch.merch_name
+				print(merchPrice)
+
+		if profileBalance >= merchPrice:
+			newBalance = profileBalance - merchPrice
+		else:
+			messages.error(request, 'Insufficient Balance. Please head to your Profile page to add credit into the account.')
+			merchandise = Merchandise.objects.all()
+			context['merchandise'] = merchandise
+			return redirect("Shop.html", context=context)
+
+		merchBought = Merchandise_Bought(
+			merch_name_id=buyBtn, 
+			username_id=userId, 
+			user_name=profileUsername,
+			product_name=merchName,
+			)
+		merchBought.save()
+
+		for profile in profiles:
+			if int(profile.username_id) == int(userId):
+				profile.balance = newBalance
+				profile.save()
+
+		merchandise = Merchandise.objects.all()
+		for merch in merchandise:
+			if int(merch.id) == int(buyBtn):
+				merch.merch_quantity = merch.merch_quantity - 1
+				merch.save()
+		
+
+	merchandise = Merchandise.objects.all()
+	context['merchandise'] = merchandise
+	return redirect("Shop.html", context=context)
 
 
 # FOR ACCOUNTS AND PROFILE
@@ -1016,6 +1192,8 @@ def Shop(request):
 	context={}
 	profiles = Profile.objects.all()
 	context['profiles'] = profiles
+	merchandise = Merchandise.objects.all()
+	context['merchandise'] = merchandise
 	return render(request, 'Shop.html', context)
 
 def News(request):

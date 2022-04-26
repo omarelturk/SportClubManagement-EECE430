@@ -2,11 +2,209 @@
 {% load static %}
 
 
+
 <!DOCTYPE html>
-<html style="font-size: 16px;">
-    {% block content %}
-    <div style="min-height:100vh; text-align:center;">
-      <h1>Coming Soon!</h1>
-    </div>
-    {% endblock %}
+<html style="font-size: 16px">
+    {%block content%}
+    <link
+      rel="stylesheet"
+      href="{% static 'scms_app/css/TeamsB.css' %}"
+      media="screen"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'scms_app/css/TeamsF.css' %}"
+      media="screen"
+    />
+
+    <style>
+      .add-merch{
+        position: absolute;
+        right: 0%;
+        top: 3%;
+      }
+    </style>
+
+
+    <section class="u-align-center u-clearfix u-section-1" id="sec-1548" style="min-height: 1000px;">
+      <div class="u-clearfix u-sheet u-sheet-1">
+        <!-- Button trigger modal -->
+        {% if 'staffuser' in request.session %}
+        <button class="btn btn-primary add-merch" type="submit" data-bs-toggle="modal" data-bs-target=".addMerchandiseClass">&plus; Add Merch</button>
+        {% endif %}
+        
+
+        <h1 class="u-text u-text-default u-text-1">Merchandise</h1>
+        <div class="u-border-3 u-border-grey-dark-1 u-expanded-width u-line u-line-horizontal u-line-1"></div>
+        <div class="u-expanded-width u-layout-grid u-list u-list-1">
+          <div class="u-repeater u-repeater-2">
+          {% for merch in merchandise %}
+            <div class="u-align-center u-container-style u-list-item u-repeater-item u-list-item-1">
+              <div class="u-container-layout u-similar-container u-container-layout-1">
+                <h5 class="u-text u-text-3">{{merch.merch_name}}</h5>
+                <img
+                  alt=""
+                  class="u-image u-image-round u-radius-50 u-image-1"
+                  data-image-width="360"
+                  data-image-height="390"
+                  src={{merch.merch_image}}
+                />
+                <h5 class="u-text u-text-3">{{merch.merch_type}}</h5>
+                <p class="u-large-text u-text u-text-variant u-text-4">Quantity: {{merch.merch_quantity}}</p>
+                <p class="u-large-text u-text u-text-variant u-text-5">Price: {{merch.merch_price}} $</p>
+                <div style="display: flex; justify-content: center;">
+                  <form method="POST" action="buyMerchandise">
+                    {% csrf_token %}
+                    {% if "normaluser" in request.session %}
+                      {% if merch.merch_quantity != 0 %}
+                        <button type="submit" name="{{merch.id}}" value="{{merch.id}}" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1 purchase-btn">Purchase</button>
+                      {% else %}
+                        <button type="submit" name="{{merch.id}}" value="{{merch.id}}" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1 purchase-btn" disabled>Purchase</button>
+                      {% endif %}
+                    {% else %}
+                      <button type="submit" name="{{merch.id}}" value="{{merch.id}}" class="u-btn u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-6 u-btn-1 purchase-btn" disabled>Purchase</button>
+                    {% endif %}
+                  </form>
+                </div>
+              </div>
+            {% if 'staffuser' in request.session %}
+              <div style="display:flex; flex-direction:column; gap:5px; margin-left:5px;">
+                <form method="POST" action="removeMerchandise">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger" name="{{merch.id}}" value="{{merch.id}}"><i class="fa fa-trash"></i></button>
+                </form>
+                  <button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target=".updateMerchandiseClass" name="{{merch.id}}" value="{{merch.id}}" id="{{merch.id}}" onclick="getId({{merch.id}})"><i class="fa fa-edit"></i></button>
+              </div>
+            {% endif %}
+            </div>
+          {% endfor %}
+
+
+
+            {% if 'staffuser' in request.session %}
+                <!-- Modal -->
+                <div class="modal fade addMerchandiseClass" id="addMerchandiseModal" tabindex="-1" aria-labelledby="addMerchandiseLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="addMerchandiseLabel">Add New Merch</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form method="POST" action="addMerchandise" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <div class="mb-3">
+                            <label for="merchName" class="col-form-label">Merch Name</label>
+                            <input type="text" class="form-control" name="merchName" id="merchName" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="merchQuantity" class="col-form-label">Merch Quantity</label>
+                            <input type="number" class="form-control" name="merchQuantity" id="merchQuantity" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="merchPrice" class="col-form-label">Merch Price</label>
+                            <input type="number" class="form-control" name="merchPrice" id="merchPrice" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="merchType" class="col-form-label">Merch Type</label>
+                            <select class="form-control form-select" aria-label="Default select example" name="merchType" id="merchType" required>
+                              <option selected value="Full-Kits">Full Kits (Top, Shorts, Socks)</option>
+                              <option value="Accessories">Accessories</option>
+                              <option value="Shoes">Shoes</option>
+                              <option value="Balls">Balls</option>
+                              <option value="Flags">Flags</option>
+                            </select>
+                          </div>
+                          <div class="mb-3">
+                            <label for="merchImage" class="form-label">Merch Image</label>
+                            <input type="file" class="form-control" name="merchImage" accept="image/*">
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary" name="submitAddMerch" value="submitAddMerch">Add Merch</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+                
+                  
+                <!-- Modal 2 -->
+                <div class="modal fade updateMerchandiseClass" id="updateMerchandiseModal" tabindex="-1" aria-labelledby="updateMerchandiseLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="updateMerchandiseLabel">Update Merch</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form method="POST" action="updateMerchandise" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <div class="mb-3">
+                            <label for="merchName" class="col-form-label">Merch Name</label>
+                            <input type="text" class="form-control" name="merchName" id="merchName" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="merchQuantity" class="col-form-label">Merch Quantity</label>
+                            <input type="number" class="form-control" name="merchQuantity" id="merchQuantity" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="merchPrice" class="col-form-label">Merch Price</label>
+                            <input type="number" class="form-control" name="merchPrice" id="merchPrice" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="merchType" class="col-form-label">Merch Type</label>
+                            <select class="form-control form-select" aria-label="Default select example" name="merchType" id="merchType" required>
+                              <option selected value="Full-Kits">Full Kits (Top, Shorts, Socks)</option>
+                              <option value="Accessories">Accessories</option>
+                              <option value="Shoes">Shoes</option>
+                              <option value="Balls">Balls</option>
+                              <option value="Flags">Flags</option>
+                            </select>
+                          </div>
+                          <div class="mb-3">
+                            <label for="merchImage" class="form-label">Merch Image</label>
+                            <input type="file" class="form-control" name="merchImage" accept="image/*">
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary" name="updateBtn" value="" id = "updateMerchandiseBtn">Apply Changes</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                    
+
+
+
+
+                    
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+
+    <script>
+      function getId(merchid){
+        updateMerchandiseModal = document.getElementById(merchid);
+        updateMerchandiseBtn = document.getElementById("updateMerchandiseBtn");
+        console.log(updateMerchandiseBtn.value)
+        console.log(updateMerchandiseModal.value)
+        updateMerchandiseBtn.value = updateMerchandiseModal.value;
+      }
+    </script>
+
+    {%endblock%}
+    
 </html>

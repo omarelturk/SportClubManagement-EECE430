@@ -107,7 +107,7 @@
 </head>
 
 <!-- Modal 1 -->
-<div class="modal fade changeProfilePicClass" id="changeProfilePic" tabindex="-1" aria-labelledby="changeProfilePicLabel" aria-hidden="true">
+<div class="modal fade changeProfilePicClassOnly" id="changeProfilePic" tabindex="-1" aria-labelledby="changeProfilePicLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
         <div class="modal-header">
@@ -358,7 +358,7 @@
               {% if profile.username_id == user.id %}
                 <div style="display:flex; flex-direction:row; margin-left:5%;">
                     <div style="align-self:center;">
-                      <img title="Click to Change Profile Picture" src={{profile.userimage}} class="u-image u-logo u-image-1" style="border-radius:50px; width:60px; height:60px; cursor:pointer;" data-bs-toggle="modal" data-bs-target=".changeProfilePicClass">
+                      <img title="Click to Change Profile Picture" src={{profile.userimage}} class="u-image u-logo u-image-1" style="border-radius:50px; width:60px; height:60px; cursor:pointer;" data-bs-toggle="modal" data-bs-target=".changeProfilePicClassOnly">
                     </div>
                     <div class="profile-div">
                       <div class="dropdown">

@@ -22,6 +22,14 @@ HOMEAWAY = [
     ('A', 'Away'),
 ]
 
+MERCHTYPE = [
+    ('Full-Kits', 'Full-Kits'),
+    ('Accessories','Accessories'),
+    ('Shoes','Shoes'),
+    ('Balls','Balls'),
+    ('Flags','Flags'),
+]
+
 # Create your models here.
 class Profile(models.Model):
     username = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -104,7 +112,7 @@ class Football_Bought_Ticket(models.Model):
 
 
     def __str__(self):
-        return self.football_bought_ticket
+        return str(self.football_bought_ticket)
 
     class Meta:
         verbose_name = "Football_Bought_Ticket"
@@ -116,8 +124,36 @@ class Basketball_Bought_Ticket(models.Model):
     user_name = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.basketball_bought_ticket
+        return str(self.basketball_bought_ticket)
 
     class Meta:
         verbose_name = "Basketball_Bought_Ticket"
         verbose_name_plural = "Basketball_Bought_Tickets"
+
+
+class Merchandise(models.Model):
+    merch_name = models.CharField(max_length=100)
+    merch_quantity = models.IntegerField()
+    merch_price = models.IntegerField()
+    merch_type = models.CharField(max_length=100, choices=MERCHTYPE)
+    merch_image = models.ImageField(storage=OverwriteStorage())
+
+    def __str__(self):
+        return str(self.merch_name)
+
+    class Meta:
+        verbose_name = "Merchandise"
+        verbose_name_plural = "AllMerchandise"
+
+class Merchandise_Bought(models.Model):
+    username = models.ForeignKey(User, on_delete=models.CASCADE)
+    merch_name = models.ForeignKey(Merchandise, on_delete=models.CASCADE)
+    user_name = models.CharField(max_length=100)
+    product_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return str(self.merch_name)
+
+    class Meta:
+        verbose_name = "MerchandiseBought"
+        verbose_name_plural = "AllMerchandiseBought"
