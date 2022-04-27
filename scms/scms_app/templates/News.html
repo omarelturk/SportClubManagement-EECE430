@@ -5,8 +5,154 @@
 <!DOCTYPE html>
 <html style="font-size: 16px;">
     {% block content %}
-    <div style="min-height:100vh; text-align:center;">
-      <h1>Coming Soon!</h1>
-    </div>
+
+    <link
+      rel="stylesheet"
+      href="{% static 'scms_app/css/News.css' %}"
+      media="screen"
+    />
+
+    <style>
+      .add-news{
+        position:absolute;
+        top:5%;
+        right:0;
+      }
+    </style>
+
+    {%if messages%}
+      {%for message in messages%}
+          <div class="alert {{message.tags}} alert-dismissible fade show" role="alert" id="message_box">
+          {{message}}
+          </div>
+      {%endfor%}
+    {%endif%}
+
+
+    <section class="u-clearfix u-section-1" id="sec-c394">
+      <div class="u-clearfix u-sheet u-sheet-1" style="margin-bottom:20%;">
+        {% if 'staffuser' in request.session %}
+          <button class="btn btn-primary add-news" type="submit" data-bs-toggle="modal" data-bs-target=".addNewsClass" id="add-newsclass">&plus; Add News</button>
+        {% endif %}
+        <h2 class="u-text u-text-default u-text-1">Latest News</h2>
+        <div class="u-border-3 u-border-grey-dark-1 u-expanded-width u-line u-line-horizontal u-line-1"></div><!--blog--><!--blog_options_json--><!--{"type":"Recent","source":"","tags":"","count":""}--><!--/blog_options_json-->
+        <div class="u-blog u-container-style u-expanded-width u-blog-1">
+          <div class="u-list-control"></div>
+          <div class="u-repeater u-repeater-1" style="margin-top: 2%;">
+            {% for test in allnews %}
+              <div class="u-blog-post u-container-style u-repeater-item">
+                  <div class="u-container-layout u-similar-container u-container-layout-1">
+                    <h2 class="u-blog-control u-text u-text-2">
+                      <a class="u-post-header-link">{{test.newsHeader}}</a>
+                    </h2>
+                    <a class="u-post-header-link">
+                      <img src={{test.newsImage}} class="u-blog-control u-expanded-width u-image u-image-default u-image-1">
+                    </a>
+                    <div class="u-blog-control u-post-content u-text">{{test.newsText}}</div>
+                  </div>
+                  {% if 'staffuser' in request.session %}
+                    <div style="display:flex; flex-direction:column; gap:5px; margin-left:5px;">
+                      <form method="POST" action="removeNews">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" name="{{test.id}}" value="{{test.id}}"><i class="fa fa-trash"></i></button>
+                      </form>
+                        <button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target=".updateNewsClass" name="{{test.id}}" value="{{test.id}}" id="{{test.id}}" onclick="getId({{test.id}})"><i class="fa fa-edit"></i></button>
+                    </div>
+                  {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+          <div class="u-list-control"></div>
+        </div><!--/blog-->
+      </div>
+
+
+
+      {% if 'staffuser' in request.session %}
+                <!-- Modal 1 -->
+                <div class="modal fade addNewsClass" id="addNewsModal" tabindex="-1" aria-labelledby="addNewsLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="addNewsLabel">Add News</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form method="POST" action="addNews" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <div class="mb-3">
+                            <label for="news_header" class="col-form-label">News Header</label>
+                            <input type="text" class="form-control" name="news_header" id="news_header" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="news_image" class="form-label">News Image</label>
+                            <input type="file" class="form-control" name="news_image" accept="image/*" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="news_text" class="col-form-label">News Text</label>
+                            <input type="text" class="form-control" name="news_text" id="news_text" required>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary" name="submitAddNews" value="submitAddNews">Confirm</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+        {% endif %}
+
+
+
+        {% if 'staffuser' in request.session %}
+        <!-- Modal 2 -->
+        <div class="modal fade updateNewsClass" id="updateNewsModal" tabindex="-1" aria-labelledby="updateNewsLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="updateNewsLabel">Update News</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form method="POST" action="updateNews" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="mb-3">
+                    <label for="news_header" class="col-form-label">News Header</label>
+                    <input type="text" class="form-control" name="news_header" id="news_header" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="news_image" class="form-label">News Image</label>
+                    <input type="file" class="form-control" name="news_image" accept="image/*">
+                  </div>
+                  <div class="mb-3">
+                    <label for="news_text" class="col-form-label">News Text</label>
+                    <input type="text" class="form-control" name="news_text" id="news_text" required>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary" name="updateBtn" value="" id="updateNewsBtn">Confirm</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+
+    </section>
+
+    <script>
+      function getId(newsid){
+        updateNewsModal = document.getElementById(newsid);
+        updateNewsBtn = document.getElementById("updateNewsBtn");
+        console.log(updateNewsBtn.value)
+        console.log(updateNewsModal.value)
+        updateNewsBtn.value = updateNewsModal.value;
+      }
+    </script>
+
+
     {% endblock %}
 </html>

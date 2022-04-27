@@ -157,3 +157,15 @@ class Merchandise_Bought(models.Model):
     class Meta:
         verbose_name = "MerchandiseBought"
         verbose_name_plural = "AllMerchandiseBought"
+
+class SportsNews(models.Model):
+    newsHeader = models.CharField(max_length=200)
+    newsImage = models.ImageField()
+    newsText = models.CharField(max_length=1000)
+
+    def __str__(self):
+        return str(self.newsHeader)
+
+    class Meta:
+        verbose_name = "News"
+        verbose_name_plural = "News"

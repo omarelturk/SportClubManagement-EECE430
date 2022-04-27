@@ -23,14 +23,33 @@
         right: 0%;
         top: 3%;
       }
+      .show-transactions{
+        position: absolute;
+        right: 0%;
+        top: 3%;
+      }
     </style>
 
+
+    {%if messages%}
+        {%for message in messages%}
+            <div class="alert {{message.tags}} alert-dismissible fade show" role="alert" id="message_box">
+            {{message}}
+            </div>
+        {%endfor%}
+    {%endif%}
 
     <section class="u-align-center u-clearfix u-section-1" id="sec-1548" style="min-height: 1000px;">
       <div class="u-clearfix u-sheet u-sheet-1">
         <!-- Button trigger modal -->
         {% if 'staffuser' in request.session %}
-        <button class="btn btn-primary add-merch" type="submit" data-bs-toggle="modal" data-bs-target=".addMerchandiseClass">&plus; Add Merch</button>
+          <button class="btn btn-primary add-merch" type="submit" data-bs-toggle="modal" data-bs-target=".addMerchandiseClass">&plus; Add Merch</button>
+        {% endif %}
+        {% if 'normaluser' in request.session %}
+        <form method="POST" class="show-transactions" action="boughtMerchandise">
+          {% csrf_token %}
+          <button class="btn btn-primary" type="submit">My History</button>
+        </form>
         {% endif %}
         
 

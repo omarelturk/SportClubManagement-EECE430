@@ -1,6 +1,7 @@
 #from multiprocessing import context
 from multiprocessing import context
 from os import stat
+from re import M
 from django.shortcuts import render, redirect
 from django.urls import resolve
 from django.http import HttpResponse
@@ -21,7 +22,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 import netifaces as ni
-from scms_app.models import Football_Player, Basketball_Player, Football_Ticket, Basketball_Ticket, Profile, Merchandise
+from scms_app.models import Football_Player, Basketball_Player, Football_Ticket, Basketball_Ticket, Profile, Merchandise, SportsNews
 from sys import platform
 from django.core.files.storage import FileSystemStorage
 
@@ -936,11 +937,50 @@ def buyMerchandise(request):
 			if int(merch.id) == int(buyBtn):
 				merch.merch_quantity = merch.merch_quantity - 1
 				merch.save()
+
+		messages.success(request, "You have successfully purchased from "+merch.merch_type+": "+merch.merch_name+"."+" It will be delivered to your address: "+profile.address+".")
 		
 
 	merchandise = Merchandise.objects.all()
 	context['merchandise'] = merchandise
 	return redirect("Shop.html", context=context)
+
+def boughtMerchandise(request):
+	context={}
+	bought_merch_ids = []
+	print("I'm inside bought merchandise")
+	userId = request.session.get('_auth_user_id')
+	merchandiseBought = Merchandise_Bought.objects.filter(username_id=userId)
+	merchandise = Merchandise.objects.all()
+
+	for merch in merchandise:
+		print(merch.id)
+		for boughtmerch in merchandiseBought:
+			if boughtmerch not in bought_merch_ids:
+				bought_merch_ids.append(boughtmerch.merch_name_id)
+
+	for i in boughtmerch:
+		if i in bought_merch_ids:
+			pass
+
+	print(bought_merch_ids)
+
+	# merchandiseId = Merchandise.objects.filter(id=merch_id)
+
+	print("ah ah ah ah ah")
+	# print(merchandiseId)
+	print(merchandiseBought)
+
+	# for merch in merchandiseId:
+
+		# if int(merch.id) == int(merch_id):
+		# 	merch_name = merch.merch_name
+		# 	merch_image = merch.merch_image
+		# 	merch_price = merch.merch_price
+			
+	# context = {"merch_name":merch_name, "merch_image":merch_image, "merch_price":merch_price}
+		
+	return render(request, "Shop.html", context)
 
 
 # FOR ACCOUNTS AND PROFILE
@@ -1105,6 +1145,106 @@ def deleteAccount(request):
 		return redirect("/")
 
 
+# FOR NEWS
+
+def addNews(request):
+	context={}
+	if request.method == "POST":
+		news_header = request.POST['news_header']
+		news_text = request.POST['news_text']
+
+		newsImageExist = request.FILES.get('news_image', False)
+		fss = FileSystemStorage()
+
+		if newsImageExist:
+			news_image = request.FILES['news_image']
+			if fss.exists(news_image.name):
+				file1_url = fss.url(news_image.name)
+				latestNews = SportsNews(
+					newsHeader=news_header,
+					newsImage=file1_url,
+					newsText=news_text,
+				)
+				latestNews.save()
+			else:
+				print("INHEREEEEEEE1111")
+				file1 = fss.save(news_image.name, news_image)
+				file1_url = fss.url(file1)
+				latestNews = SportsNews(
+					newsHeader=news_header,
+					newsImage=file1_url,
+					newsText=news_text,
+				)
+				latestNews.save()
+
+	allnews = SportsNews.objects.all()
+	context['allnews'] = allnews
+	return redirect("News.html", context=context)
+
+
+def removeNews(request):
+	context={}
+	arr = []
+	if request.method == "POST":
+		for key in request.POST.keys():
+			arr.append(key)
+			print(key)
+		removeBtn = arr[1]
+		print(removeBtn)
+		newsdelete = SportsNews.objects.get(id=removeBtn)
+		newsdelete.delete()
+	allnews = SportsNews.objects.all()
+	context['allnews'] = allnews
+	return redirect("News.html", context=context)
+
+
+def updateNews(request):
+	context={}
+	if request.method == "POST":
+		
+		print(request.POST)
+
+		newsId = request.POST['updateBtn']
+		news_header = request.POST['news_header']
+		news_text = request.POST['news_text']
+
+		
+
+		print("BREAK")
+
+		newsupdate = SportsNews.objects.filter(id=newsId)
+
+		newsImageExist = request.FILES.get('newsImage', False)
+		fss = FileSystemStorage()
+
+		if newsImageExist:
+			newsImage = request.FILES['newsImage']
+			if fss.exists(newsImage.name):
+				file1_url = fss.url(newsImage.name)
+				newsupdate.update(
+					newsHeader=news_header,
+					newsImage=file1_url,
+					newsText=news_text,
+				)
+			else:
+				print("INHEREEEEEEE1111")
+				file1 = fss.save(newsImage.name, newsImage)
+				file1_url = fss.url(file1)
+				newsupdate.update(
+					newsHeader=news_header,
+					newsImage=file1_url,
+					newsText=news_text,
+				)
+		else:
+			print("Im in else")
+			newsupdate.update(
+				newsHeader=news_header,
+				newsText=news_text,
+			)
+
+	allnews = SportsNews.objects.all()
+	context['allnews'] = allnews
+	return redirect("News.html", context=context)
 
 ###############################################################################################
 
@@ -1199,6 +1339,8 @@ def Shop(request):
 def News(request):
 	context={}
 	profiles = Profile.objects.all()
+	allnews = SportsNews.objects.all()
+	context['allnews'] = allnews
 	context['profiles'] = profiles
 	return render(request, 'News.html', context)    
 
