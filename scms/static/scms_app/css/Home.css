@@ -14,8 +14,10 @@
 }
 
 .u-section-1 .u-line-1 {
+  left: 15%;
+  top: 80%;
   width: 912px;
-  margin: 25px auto 60px 92px;
+  position: absolute;
 }
 
 @media (max-width: 1199px) {

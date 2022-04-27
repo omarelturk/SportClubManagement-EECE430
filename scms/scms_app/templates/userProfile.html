@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html style="font-size: 16px;">
+    {% block content %}
+    <link
+      rel="stylesheet"
+      href="{% static 'scms_app/css/userProfile.css' %}"
+      media="screen"
+    />
+
+    <style>
+      .big-box{
+        border-style: solid;
+        border-width: medium;
+        background-color:#fcece3;
+        border-radius: 50px 50px 0px 0px;
+      }
+      .span-un{
+        color:#dc3545;
+        background-color: white;
+        padding: 5px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        border-radius: 10px;
+      }
+
+      .info-fields{
+        display:flex;
+        cursor: pointer;
+      }
+
+      .u-layout-col p {
+        align-self:center;
+      }
+
+      .reset-pass-buttons{
+        margin-top:5%;
+        margin-left:8%;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+      }
+
+      .bottom-buttons{
+        display: flex;
+        justify-content: center;
+        gap: 100px;
+      }
+
+      .roundimg-class{
+        position: relative;
+        left: 8%;
+        bottom: 8%;
+        width:10%;
+      }
+
+    </style>
+
+
+    <section class="u-clearfix u-section-1" id="sec-2920" style="min-height: 1000px;">
+
+      {%if messages%}
+        {%for message in messages%}
+            <div class="alert {{message.tags}} alert-dismissible fade show" role="alert" id="message_box">
+            {{message}}
+            </div>
+        {%endfor%}
+    {%endif%}
+
+      <!-- Modal 1 -->
+      <div class="modal fade changeProfilePicClass" id="changeProfilePic" tabindex="-1" aria-labelledby="changeProfilePicLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="changeProfilePicLabel">Change Profile Picture</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form method="POST" action="changeProfileImage" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="mb-3">
+                    <label for="profileImage" class="form-label">Your Image</label>
+                    <input type="file" class="form-control" name="profileImage" accept="image/*">
+                  </div>
+                  <div class="mb-3">
+                    <label for="profileBackgroundImage" class="form-label">Your Background Image</label>
+                    <input type="file" class="form-control" name="profileBackgroundImage" accept="image/*">
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" name="changeImg" value="changeImg">Apply Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Modal 2 -->
+      <div class="modal fade addBalanceClass" id="addBalance" tabindex="-1" aria-labelledby="addBalanceLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="addBalanceLabel">Add To Your Balance</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form method="POST" action="addBalance" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="mb-3">
+                    <label for="balanceToBeAdded" class="form-label">Amount To Be Added</label>
+                    <input type="number" class="form-control" name="amount_added" required>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" name="addProfileBalance" value="addProfileBalance">Add Balance</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      
+      <!-- Modal 3 -->
+      <div class="modal fade updateProfileClass" id="updateProfile" tabindex="-1" aria-labelledby="updateProfileLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="updateProfileLabel">Change Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form method="POST" action="updateProfileInfo" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="mb-3">
+                    <label for="profileFName" class="form-label">Change First Name</label>
+                    <input type="text" class="form-control" name="profileFName" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="profileLName" class="form-label">Change Last Name</label>
+                    <input type="text" class="form-control" name="profileLName" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="profileEmail" class="form-label">Change Email</label>
+                    <input type="text" class="form-control" name="profileEmail" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="profileAddress" class="form-label">Change Address</label>
+                    <input type="text" class="form-control" name="profileAddress" required>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" name="updateProflileInfo" value="updateProflileInfo">Apply Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Modal 4 -->
+      <div class="modal fade updateUsernameClass" id="updateUsername" tabindex="-1" aria-labelledby="updateUsernameLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="updateUsernameLabel">Change Username</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form method="POST" action="updateUsername" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="mb-3">
+                    <label for="newUsername" class="form-label">New Username</label>
+                    <input type="text" class="form-control" name="newUsername" required>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" name="updateProflileInfo" value="updateProflileInfo">Apply Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+
+
+
+
+      <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+        <div class="u-container-style u-group u-shape-round u-group-1">
+          <div class="u-container-layout u-container-layout-1 big-box">
+            {% for profile in profiles %}
+              {% if profile.username_id == user.id %}
+                <img title="Click to Change Background Picture" class="u-expanded-width u-image u-image-round u-top-left-radius-45 u-top-right-radius-45 u-image-1" style="cursor: pointer;" name="backimg" src={{profile.userbackimage}} alt="" data-image-width="1200" data-image-height="965" data-bs-toggle="modal" data-bs-target=".changeProfilePicClass">
+                {% endif %}
+            {% endfor %}
+
+
+            {% for profile in profiles %}
+              {% if profile.username_id == user.id %}
+                  <div class="roundimg-class" data-image-width="1280" data-image-height="924"><img class="u-image u-image-circle u-image-2" style="cursor: pointer;" name="roundimg" title="Click to Change Profile Picture" src={{profile.userimage}} data-bs-toggle="modal" data-bs-target=".changeProfilePicClass"></img></div>          
+              {% endif %}
+            {% endfor %}   
+
+            <h1 class="u-custom-font u-text u-text-default u-text-font u-text-1">{{user.username}}'s Profile</h1>
+            <div class="u-clearfix u-gutter-40 u-layout-wrap u-layout-wrap-1">
+              <div class="u-gutter-0 u-layout">
+                <div class="u-layout-col" style="margin-top:20%;">
+                  <div class="u-container-style u-layout-cell u-shape-rectangle u-size-20 u-white u-layout-cell-1">
+                    <div class="u-border-2 u-border-grey-75 u-container-layout u-container-layout-2 info-fields" data-bs-toggle="modal" data-bs-target=".updateProfileClass">
+                      <span class="u-file-icon u-gradient u-icon u-icon-circle u-icon-1"><img src="scms_app/media/7191087.png" alt=""></span>
+                      <p class="u-large-text u-text u-text-default u-text-variant u-text-2">{{user.first_name}} {{user.last_name}}</p>
+                    </div>
+                  </div>
+                  <div class="u-container-style u-layout-cell u-shape-rectangle u-size-20 u-white u-layout-cell-2">
+                    <div class="u-border-2 u-border-grey-75 u-container-layout u-container-layout-3 info-fields" data-bs-toggle="modal" data-bs-target=".updateProfileClass">
+                      <span class="u-file-icon u-gradient u-icon u-icon-circle u-icon-2"><img src="scms_app/media/7286248.png" alt=""></span>
+                      <p class="u-large-text u-text u-text-default u-text-variant u-text-3">{{user.email}}</p>
+                    </div>
+                  </div>
+                  <div class="u-container-style u-layout-cell u-shape-rectangle u-size-20 u-white u-layout-cell-3">
+                    <div class="u-border-2 u-border-grey-75 u-container-layout u-container-layout-4 info-fields" data-bs-toggle="modal" data-bs-target=".updateProfileClass">
+                      <span class="u-file-icon u-gradient u-icon u-icon-circle u-icon-3"><img src="scms_app/media/1077874.png" alt=""></span>
+                      {% for profile in profiles %}
+                      {% if profile.username_id == user.id %}
+                        <p class="u-large-text u-text u-text-default u-text-variant u-text-4">{{profile.balance}} $</p>
+                      {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <div class="u-container-style u-layout-cell u-shape-rectangle u-size-20 u-white u-layout-cell-3">
+                    <div class="u-border-2 u-border-grey-75 u-container-layout u-container-layout-4 info-fields" data-bs-toggle="modal" data-bs-target=".updateProfileClass">
+                      <span class="u-file-icon u-gradient u-icon u-icon-circle u-icon-4"><img src="scms_app/media/6191503.png" alt=""></span>
+                      {% for profile in profiles %}
+                        {% if profile.username_id == user.id %}
+                          <p class="u-large-text u-text u-text-default u-text-variant u-text-4">{{profile.address}}</p>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            
+
+            <div class="reset-pass-buttons">
+              <div>
+                <a href="/passwordreset" class="u-btn u-button-style u-none u-text-hover-palette-2-base u-text-palette-1-base u-btn-2">Reset password&nbsp;<span class="u-icon u-text-palette-1-base u-icon-6"><svg class="u-svg-content" viewBox="0 -32 426.66667 426" style="width: 1em; height: 1em;"><path d="m213.332031 181.667969c0 4.265625-1.277343 8.53125-3.625 11.730469l-106.667969 160c-3.839843 5.761718-10.238281 9.601562-17.707031 9.601562h-64c-11.730469 0-21.332031-9.601562-21.332031-21.332031 0-4.269531 1.28125-8.535157 3.625-11.734375l98.773438-148.265625-98.773438-148.269531c-2.34375-3.199219-3.625-7.464844-3.625-11.730469 0-11.734375 9.601562-21.335938 21.332031-21.335938h64c7.46875 0 13.867188 3.839844 17.707031 9.601563l106.667969 160c2.347657 3.199218 3.625 7.464844 3.625 11.734375zm0 0"></path><path d="m426.667969 181.667969c0 4.265625-1.28125 8.53125-3.628907 11.730469l-106.664062 160c-3.839844 5.761718-10.242188 9.601562-17.707031 9.601562h-64c-11.734375 0-21.335938-9.601562-21.335938-21.332031 0-4.269531 1.28125-8.535157 3.628907-11.734375l98.773437-148.265625-98.773437-148.269531c-2.347657-3.199219-3.628907-7.464844-3.628907-11.730469 0-11.734375 9.601563-21.335938 21.335938-21.335938h64c7.464843 0 13.867187 3.839844 17.707031 9.601563l106.664062 160c2.347657 3.199218 3.628907 7.464844 3.628907 11.734375zm0 0"></path></svg><img></span></a>
+              </div>
+              <div class="bottom-buttons">
+                
+                <button type="submit" class="u-border-none u-btn u-btn-round u-button-style u-custom-color-1 u-hover-custom-color-4 u-radius-6 u-btn-1" data-bs-toggle="modal" data-bs-target=".addBalanceClass">Add Balance</button>
+                
+                <form method="POST" action="deleteAccount" style="margin-bottom: 20px;">
+                  {% csrf_token %}
+                  <button type="submit" class="u-border-none u-btn u-btn-round u-button-style u-custom-color-1 u-hover-custom-color-4 u-radius-6 u-btn-1">Delete Account</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    {% endblock %}
+  </body>
+</html>

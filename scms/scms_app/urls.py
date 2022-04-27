@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 
+
 urlpatterns = [
     path('', views.Home, name='Home'),
     path('About.html', views.About, name='About'),
@@ -12,7 +13,37 @@ urlpatterns = [
     path('StadiumMuseum.html', views.StadiumMuseum, name='StadiumMuseum'),
     path('TeamsB.html', views.TeamsB, name='TeamsB'),
     path('TeamsF.html', views.TeamsF, name='TeamsF'),
-    #path("register", views.register_request, name="register")
-    # path('/login', views.LoginView.as_view(template_name="scms_app/templates/Signin.html"), name='login'),
-    # path('/logout', views.LogoutView.as_view(), name='logout')
+    path('Fixtures.html', views.Fixtures, name='Fixtures'),
+    path('Tickets.html', views.Tickets, name='Tickets'),
+    path('Shop.html', views.Shop, name='Shop'),
+    path('News.html', views.News, name='News'),
+    path('userProfile.html', views.userProfile, name='userProfile'),
+    path('addBasketballPlayer', views.addBasketballPlayer, name='addBasketballPlayer'),
+    path('removeBasketballPlayer', views.removeBasketballPlayer, name='removeBasketballPlayer'),
+    path('updateBasketballPlayer', views.updateBasketballPlayer, name='updateBasketballPlayer'),
+    path('addFootballPlayer', views.addFootballPlayer, name='addFootballPlayer'),
+    path('removeFootballPlayer', views.removeFootballPlayer, name='removeFootballPlayer'),
+    path('updateFootballPlayer', views.updateFootballPlayer, name='updateFootballPlayer'),
+    path('addFootballTicket', views.addFootballTicket, name='addFootballTicket'),
+    path('addBasketballTicket', views.addBasketballTicket, name='addBasketballTicket'),
+    path('removeFootballTicket', views.removeFootballTicket, name='removeFootballTicket'),
+    path('removeBasketballTicket', views.removeBasketballTicket, name='removeBasketballTicket'),
+    path('updateFootballTicket', views.updateFootballTicket, name='updateFootballTicket'),
+    path('updateBasketballTicket', views.updateBasketballTicket, name='updateBasketballTicket'),
+    path('buyBasketballTicket', views.buyBasketballTicket, name='buyBasketballTicket'),
+    path('buyFootballTicket', views.buyFootballTicket, name='buyFootballTicket'),
+    path('addMerchandise', views.addMerchandise, name='addMerchandise'),
+    path('removeMerchandise', views.removeMerchandise, name='removeMerchandise'),
+    path('updateMerchandise', views.updateMerchandise, name='updateMerchandise'),
+    path('buyMerchandise', views.buyMerchandise, name='buyMerchandise'),
+    path('boughtMerchandise', views.boughtMerchandise, name='boughtMerchandise'),
+    path('addNews', views.addNews, name='addNews'),
+    path('removeNews', views.removeNews, name='removeNews'),
+    path('updateNews', views.updateNews, name='updateNews'),
+    path('changeProfileImage', views.changeProfileImage, name='changeProfileImage'),
+    path('updateProfileInfo', views.updateProfileInfo, name='updateProfileInfo'),
+    path('updateUsername', views.updateUsername, name='updateUsername'),
+    path('addBalance', views.addBalance, name='addBalance'),
+    path('deleteAccount', views.deleteAccount, name='deleteAccount'),
+    # path('getBasketballPlayerId', views.getBasketballPlayerId, name='getBasketballPlayerId'),
 ]

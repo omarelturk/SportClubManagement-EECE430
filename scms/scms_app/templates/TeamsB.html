@@ -11,147 +11,186 @@
       href="{% static 'scms_app/css/TeamsB.css' %}"
       media="screen"
     />
-    <section class="u-align-center u-clearfix u-section-1" id="sec-1548">
+    <link
+      rel="stylesheet"
+      href="{% static 'scms_app/css/TeamsF.css' %}"
+      media="screen"
+    />
+
+    <style>
+      .add-player{
+        position: absolute;
+        right: 0%;
+        top: 3%;
+      }
+    </style>
+
+
+    <section class="u-align-center u-clearfix u-section-1" id="sec-1548" style="min-height: 1000px;">
       <div class="u-clearfix u-sheet u-sheet-1">
+        <!-- Button trigger modal -->
+        {% if 'staffuser' in request.session %}
+        <button class="btn btn-primary add-player" type="submit" data-bs-toggle="modal" data-bs-target=".addBasketballPlayerClass">&plus; Add Player</button>
+        {% endif %}
+        
+
         <h1 class="u-text u-text-default u-text-1">Basketball Team</h1>
         <div
           class="u-border-3 u-border-grey-dark-1 u-expanded-width u-line u-line-horizontal u-line-1"
         ></div>
         <div class="u-expanded-width u-layout-grid u-list u-list-1">
-          <div class="u-repeater u-repeater-1">
+          <div class="u-repeater u-repeater-2">
+            {% for player in players %}
             <div
-              class="u-align-center u-container-style u-list-item u-repeater-item u-list-item-1"
-            >
-              <div
-                class="u-container-layout u-similar-container u-valign-bottom u-container-layout-1"
-              >
-                <h2 class="u-text u-text-2">3</h2>
-                <img
-                  alt=""
-                  class="u-expanded-width u-image u-image-round u-radius-50 u-image-1"
-                  data-image-width="925"
-                  data-image-height="925"
-                  src="{% static 'scms_app/images/basket1copy.png' %}"
-                />
-                <h5 class="u-text u-text-3">Player1</h5>
-                <p class="u-text u-text-4">GUARD</p>
-                <p class="u-large-text u-text u-text-variant u-text-5">
-                  Nationality
-                </p>
-              </div>
-            </div>
+            class="u-align-center u-container-style u-list-item u-repeater-item u-list-item-1"
+          >
             <div
-              class="u-align-center u-container-style u-list-item u-repeater-item u-list-item-2"
+              class="u-container-layout u-similar-container u-container-layout-1"
             >
-              <div
-                class="u-container-layout u-similar-container u-valign-bottom u-container-layout-2"
-              >
-                <h2 class="u-text u-text-6">5</h2>
-                <img
-                  alt=""
-                  class="u-expanded-width u-image u-image-round u-radius-50 u-image-2"
-                  data-image-width="555"
-                  data-image-height="555"
-                  src="{% static 'scms_app/images/basket2copy.png' %}"
-                />
-                <h5 class="u-text u-text-7">Player7</h5>
-                <p class="u-text u-text-8">FORWARD</p>
-                <p class="u-large-text u-text u-text-variant u-text-9">
-                  Nationality
-                </p>
-              </div>
+              <h2 class="u-text u-text-2">{{player.player_number}}</h2>
+              <img
+                alt=""
+                class="u-image u-image-round u-radius-50 u-image-1"
+                data-image-width="360"
+                data-image-height="390"
+                src={{player.player_image}}
+              />
+              <h5 class="u-text u-text-3">{{player.player_name}}</h5>
+              <p class="u-text u-text-4">{{player.player_position}}</p>
+              <p class="u-large-text u-text u-text-variant u-text-5">
+                {{player.player_nationality}}
+              </p>
             </div>
-            <div
-              class="u-align-center u-container-style u-list-item u-repeater-item u-list-item-3"
-            >
-              <div
-                class="u-container-layout u-similar-container u-valign-bottom u-container-layout-3"
-              >
-                <h2 class="u-text u-text-10">7</h2>
-                <img
-                  alt=""
-                  class="u-expanded-width u-image u-image-round u-radius-50 u-image-3"
-                  data-image-width="559"
-                  data-image-height="620"
-                  src="{% static 'scms_app/images/basket3.jpeg' %}"
-                />
-                <h5 class="u-text u-text-11">Player2</h5>
-                <p class="u-text u-text-12">CENTER</p>
-                <p class="u-large-text u-text u-text-variant u-text-13">
-                  Nationality
-                </p>
+            {% if 'staffuser' in request.session %}
+              <div style="display:flex; flex-direction:column; gap:5px; margin-left:5px;">
+                <form method="POST" action="removeBasketballPlayer">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger" name="{{player.id}}" value="{{player.id}}"><i class="fa fa-trash"></i></button>
+                </form>
+                  <button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target=".updateBasketballPlayerClass" name="{{player.id}}" value="{{player.id}}" id="{{player.id}}" onclick="getId({{player.id}})"><i class="fa fa-edit"></i></button>
               </div>
-            </div>
-            <div
-              class="u-align-center u-container-style u-list-item u-repeater-item u-list-item-4"
-            >
-              <div
-                class="u-container-layout u-similar-container u-valign-bottom u-container-layout-4"
-              >
-                <h2 class="u-text u-text-14">9</h2>
-                <img
-                  alt=""
-                  class="u-expanded-width u-image u-image-round u-radius-50 u-image-4"
-                  data-image-width="331"
-                  data-image-height="392"
-                  src="{% static 'scms_app/images/basket4.jpeg' %}"
-                />
-                <h5 class="u-text u-text-15">Player5</h5>
-                <p class="u-text u-text-16">FORWARD</p>
-                <p class="u-large-text u-text u-text-variant u-text-17">
-                  Nationality
-                </p>
-              </div>
-            </div>
-            <div
-              class="u-align-center u-container-style u-list-item u-repeater-item u-list-item-5"
-            >
-              <div
-                class="u-container-layout u-similar-container u-valign-bottom u-container-layout-5"
-              >
-                <h2 class="u-text u-text-18">11</h2>
-                <img
-                  alt=""
-                  class="u-expanded-width u-image u-image-round u-radius-50 u-image-5"
-                  data-image-width="263"
-                  data-image-height="270"
-                  src="{% static 'scms_app/images/basket5.jpeg' %}"
-                />
-                <h5 class="u-text u-text-19">Player6</h5>
-                <p class="u-text u-text-20">CENTER</p>
-                <p class="u-large-text u-text u-text-variant u-text-21">
-                  Nationality
-                </p>
-              </div>
-            </div>
-            <div
-              class="u-align-center u-container-style u-list-item u-repeater-item u-list-item-6"
-            >
-              <div
-                class="u-container-layout u-similar-container u-valign-bottom u-container-layout-6"
-              >
-                <h2 class="u-text u-text-22">13</h2>
-                <img
-                  alt=""
-                  class="u-expanded-width u-image u-image-round u-radius-50 u-image-6"
-                  data-image-width="625"
-                  data-image-height="625"
-                  src="{% static 'scms_app/images/basket6.jpeg' %}"
-                />
-                <h5 class="u-text u-text-23">Player6</h5>
-                <p class="u-text u-text-24">GUARD</p>
-                <p class="u-large-text u-text u-text-variant u-text-25">
-                  Nationality
-                </p>
-              </div>
-            </div>
+            {% endif %}
           </div>
-        </div>
-        <div class="u-list u-list-2">
-          <div class="u-repeater u-repeater-2"></div>
+            {% endfor %}
+            {% if 'staffuser' in request.session %}
+                <!-- Modal -->
+                <div class="modal fade addBasketballPlayerClass" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add A New Player</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form method="POST" action="addBasketballPlayer" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <div class="mb-3">
+                            <label for="playerName" class="col-form-label">Player Name</label>
+                            <input type="text" class="form-control" name="playerName" id="playerName" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="playerNumber" class="col-form-label">Player Number</label>
+                            <input type="number" class="form-control" name="playerNumber" id="playerNumber" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="playerPosition" class="col-form-label">Player Position</label>
+                            <select class="form-control form-select" aria-label="Default select example" name="playerPosition" id="playerPosition" required>
+                              <option selected value="Forward">Forward</option>
+                              <option value="Center">Center</option>
+                              <option value="Guard">Guard</option>
+                            </select>
+                          </div>
+                          <div class="mb-3">
+                            <label for="playerNationality" class="col-form-label">Player Nationality</label>
+                            <input type="text" class="form-control" name="playerNationality" id="playerNationality" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="playerImage" class="form-label">Player Image</label>
+                            <input type="file" class="form-control" name="playerImage" accept="image/*">
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary" name="submitPlayer" value="submitPlayer">Add Player</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+                
+                  
+                      <!-- Modal 2 -->
+                    <div class="modal fade updateBasketballPlayerClass" id="updateBasketballModal" tabindex="-1" aria-labelledby="updateBasketballModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="updateBasketballModal">Update A Player</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <form method="POST" action="updateBasketballPlayer" enctype="multipart/form-data">
+                              {% csrf_token %}
+                              <div class="mb-3">
+                                <label for="playerName" class="col-form-label">Player Name</label>
+                                <input type="text" class="form-control" name="playerName" id="playerName" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="playerNumber" class="col-form-label">Player Number</label>
+                                <input type="number" class="form-control" name="playerNumber" id="playerNumber" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="playerPosition" class="col-form-label">Player Position</label>
+                                <select class="form-control form-select" aria-label="Default select example" name="playerPosition" id="playerPosition" required>
+                                  <option selected value="Forward">Forward</option>
+                                  <option value="Center">Center</option>
+                                  <option value="Guard">Guard</option>
+                                </select>
+                              </div>
+                              <div class="mb-3">
+                                <label for="playerNationality" class="col-form-label">Player Nationality</label>
+                                <input type="text" class="form-control" name="playerNationality" id="playerNationality" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="playerImage" class="form-label">Player Image</label>
+                                <input type="file" class="form-control" name="playerImage" accept="image/*">
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-primary" name="updateBtn" value="" id="updateBasketballPlayerBtn">Update Player</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    
+
+
+
+
+                    
+            {% endif %}
+          </div>
         </div>
       </div>
     </section>
+
+
+
+
+    <script>
+      function getId(playerid){
+        openUpdateModal = document.getElementById(playerid);
+        updateBasketballPlayerBtn = document.getElementById("updateBasketballPlayerBtn");
+        console.log(openUpdateModal.value)
+        updateBasketballPlayerBtn.value = openUpdateModal.value;
+      }
+    </script>
+
     {%endblock%}
     
 </html>

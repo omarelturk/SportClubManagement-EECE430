@@ -8,13 +8,15 @@
     {%if messages%}
         {%for message in messages%}
             <div class="alert {{message.tags}} alert-dismissible fade show" role="alert" id="message_box">
-            {% comment %} <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button> {% endcomment %}
             {{message}}
             </div>
         {%endfor%}
     {%endif%}
+    <link
+      rel="stylesheet"
+      href="{% static 'scms_app/css/Home.css' %}"
+      media="screen"
+    />
     <section class="u-align-center u-clearfix u-section-1" src="" id="sec-ae19">
       <div class="u-clearfix u-sheet u-sheet-1">
         <h1 class="u-text u-title u-text-1">
@@ -33,6 +35,7 @@
     <section
       class="u-align-center u-clearfix u-white u-section-2"
       id="sec-5028"
+      style="min-height: 1000px;"
     >
       <div class="u-clearfix u-sheet u-sheet-1">
         <h2 class="u-align-left u-text u-text-default u-text-1">Latest News</h2>

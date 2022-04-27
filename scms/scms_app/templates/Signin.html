@@ -38,8 +38,9 @@
     <section
       class="u-align-center u-clearfix u-uploaded-video u-section-1"
       id="carousel_cfc5"
+      style="min-height: 1000px;"
     >
-      <div class="u-clearfix u-sheet u-sheet-1">
+      <div class="u-clearfix u-sheet u-sheet-1" style="margin-bottom:10%;">
         <img
           class="u-image u-image-default u-preserve-proportions u-image-1"
           src="{% static 'scms_app/images/aub_phoenix.jpeg' %}"
@@ -55,14 +56,16 @@
           {%for message in messages%}
             {%if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS%}
               <div class="alert {{message.tags}} alert-dismissible fade show" role="alert" id="message_box">
-                {% comment %} <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button> {% endcomment %}
+                {{message}}
+              </div>
+            {%endif%}
+            {%if message.level == DEFAULT_MESSAGE_LEVELS.WARNING%}
+              <div class="alert {{message.tags}} alert-dismissible fade show" role="alert" id="message_box">
                 {{message}}
               </div>
             {%endif%}
           {%endfor%}
-        {%endif%}
+        {% endif %}
 
         <div class="form-login">
           <div class="inside-form-login">
